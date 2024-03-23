@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import LinkButton from '../LinkButton'
 
 const PersonCard = () => {
   return (
@@ -16,13 +16,11 @@ const PersonCard = () => {
           <p>Location: San Francisco</p>
           <p>Available: Monday, Tuesday, Fridays</p>
         </div>
-        <Link
+        <LinkButton
           href={`/appointment/1`}
-          className={
-            'btn btn-primary btn-outline rounded-xl h-10 min-h-10 border-none bg-primary-content bg-opacity-40'
-          }>
+          className={'w-full'}>
           Select
-        </Link>
+        </LinkButton>
       </div>
     </div>
   )
