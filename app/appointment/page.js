@@ -4,7 +4,7 @@ import SpecialistList from './SpecialistList'
 
 const Home = () => {
   return (
-    <main className='flex justify-between gap-10 m-10'>
+    <main className='flex justify-between max-h-screen gap-10 m-10'>
       <AppointmentForm />
       <SpecialistList />
     </main>

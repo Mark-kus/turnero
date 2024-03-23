@@ -9,8 +9,8 @@ const PersonCard = () => {
         <div className='bg-slate-200 border-2 border-base-300 w-40 h-40 rounded-lg m-2'></div>
       </figure>
       <div className='card-body py-2'>
-        <h2 className='card-title text-lg'>Robert California, 36</h2>
-        <div className='text-sm'>
+        <h2 className='font-medium text-lg'>Robert California, 36</h2>
+        <div className='text-xs'>
           <p>Health insurance: None</p>
           <p>Dentist: Extractions, Surgeries, Cleaning</p>
           <p>Location: San Francisco</p>

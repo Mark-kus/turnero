@@ -5,7 +5,7 @@ const MinimalInput = ({ placeholder, className }) => {
     <input
       type='text'
       placeholder={placeholder || 'Placeholder'}
-      className={`input bg-neutral border-2 border-base-300 w-full ${className}`}
+      className={`input bg-neutral border-2 border-base-300 w-full h-10 text-sm ${className}`}
     />
   )
 }

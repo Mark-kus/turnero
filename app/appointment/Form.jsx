@@ -5,18 +5,18 @@ import DimmedLabel from '../ui/DimmedLabel'
 
 const AppointmentForm = () => {
   return (
-    <div className='hero w-full bg-neutral'>
+    <div className='hero bg-neutral'>
       <div className='hero-content'>
-        <div className='max-w-md'>
-          <h1 className='text-2xl'>Pick your appointment</h1>
-          <p className='py-6'>
+        <div className='max-w-md m-4'>
+          <h1 className='text-2xl leading-3'>Pick your appointment</h1>
+          <p className='py-6 text-xs'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
             dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
             ea commodo.
           </p>
           <div className='bg-gray-200 h-36 rounded-lg border-2 border-base-300'></div>
           <form>
-            <label className='form-control w-full mt-8'>
+            <label className='form-control w-full mt-4'>
               <DimmedLabel>Specialty</DimmedLabel>
               <MinimalInput />
             </label>
@@ -28,7 +28,7 @@ const AppointmentForm = () => {
               <DimmedLabel>Health insurance</DimmedLabel>
               <MinimalInput />
             </label>
-            <Button className={'w-full mt-8'}>Label</Button>
+            <Button className={'w-full min-h-8 h-8 text-xs font-medium mt-6'}>Label</Button>
           </form>
         </div>
       </div>
