@@ -1,9 +1,16 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Label from '@/app/ui/Label'
 import UnborderedInput from '@/app/ui/UnborderedInput'
 
 const Register = () => {
+  const [showPassword, setShowPassword] = useState(false)
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
   return (
     <section className='m-auto'>
       <h1 className='text-3xl font-bold mb-10'>Sign Up</h1>
@@ -23,7 +30,16 @@ const Register = () => {
       </label>
       <label className='form-control w-full mt-4'>
         <Label>Password</Label>
-        <UnborderedInput />
+
+        <div className='relative'>
+          <UnborderedInput type={showPassword ? 'text' : 'password'} />
+          <button
+            type='button'
+            onClick={togglePasswordVisibility}
+            className='absolute inset-y-0 right-0 px-4 py-2'>
+            X
+          </button>
+        </div>
       </label>
       <label className='label p-0 my-4 cursor-pointer flex-row-reverse justify-end'>
         <span className='label-text text-xs ml-2'>Vertibulum faucibus odio vitae arcu auctor lectus</span>

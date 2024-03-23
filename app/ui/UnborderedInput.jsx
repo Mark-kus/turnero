@@ -1,9 +1,9 @@
 import React from 'react'
 
-const UnborderedInput = ({ placeholder, className }) => {
+const UnborderedInput = ({ type, placeholder, className }) => {
   return (
     <input
-      type='text'
+      type={type ?? 'text'}
       placeholder={placeholder || 'Placeholder'}
       className={`input bg-neutral rounded-none border-b border-b-base-300 w-full ${className}`}
     />

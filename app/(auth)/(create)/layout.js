@@ -3,8 +3,7 @@ import React from 'react'
 const AuthLayout = ({ children }) => {
   return (
     <div className='flex'>
-      <div className='bg-gray-200 h-screen w-1/2'></div>
-      {children}
+      <div className='bg-gray-200 h-screen w-2/5'></div> {children}
     </div>
   )
 }
