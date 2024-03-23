@@ -5,6 +5,13 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
+  theme: {
+    extend: {
+      maxHeight: {
+        '2xl': '42rem'
+      }
+    }
+  },
   daisyui: {
     themes: [
       {
@@ -12,7 +19,7 @@ module.exports = {
           primary: '#3A00E5',
           secondary: '#00f400',
           accent: '#0097ff',
-          neutral: '#F2F4F8',
+          neutral: '#F2F2F2',
           'base-100': '#FFF',
           info: '#00cdff',
           success: '#009951',

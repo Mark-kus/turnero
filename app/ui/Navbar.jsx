@@ -20,7 +20,7 @@ const Navbar = () => {
         </Link>
         <Link
           className='link link-hover text-primary text-sm font-medium'
-          href='/'>
+          href='/appointment'>
           Book appointments
         </Link>
         <div className='dropdown dropdown-end'>
