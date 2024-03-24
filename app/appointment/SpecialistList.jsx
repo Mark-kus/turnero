@@ -31,8 +31,7 @@ const SpecialistList = () => {
                   />
                   <LinkButton
                     href={`/appointment/1`}
-                    className={'w-full border-none'}>
-
+                    className={'bg-primary-content text-primary btn-primary w-full border-none'}>
                     Select
                   </LinkButton>
                 </>

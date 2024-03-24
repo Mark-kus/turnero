@@ -92,7 +92,7 @@ const Confirmation = () => {
                 />
                 <LinkButton
                   href={'/appointment'}
-                  className='border-2 border-base-300'>
+                  className='bg-transparent text-black border-2 border-base-300 hover:bg-base-300 hover:text-black'>
                   The appointment is for a family member
                 </LinkButton>
               </>
@@ -103,7 +103,7 @@ const Confirmation = () => {
       <div className='flex justify-center gap-4 w-full mt-32'>
         <LinkButton
           href={`/appointment/1`}
-          className={'bg-white border-none w-full shrink'}>
+          className={'btn-primary text-primary bg-white border-none w-full shrink'}>
           Go back
         </LinkButton>
         <Button className={' w-full shrink'}>Confirm appointment</Button>

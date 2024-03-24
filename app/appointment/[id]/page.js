@@ -15,7 +15,7 @@ const AppointmentDatetime = () => {
       </div>
       <div className='self-end mt-4'>
         <LinkButton
-          className={'w-80 border-none'}
+          className={'btn-primary bg-primary-content text-primary w-80 border-none'}
           href='/appointment'>
           Go back
         </LinkButton>
