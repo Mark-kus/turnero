@@ -34,7 +34,7 @@ const Confirmation = () => {
   const specialist = {
     name: `${fakeAppointment.specialist.name}, ${fakeAppointment.specialist.age}`,
     content: [
-      { name: 'Health insurance', value: fakeAppointment.specialist.insurance },
+      { name: 'Health Insurance', value: fakeAppointment.specialist.insurance },
       { name: 'Dentist', value: fakeAppointment.specialist.specialty },
       { name: 'Location', value: fakeAppointment.specialist.location },
       { name: 'Available', value: fakeAppointment.specialist.available.join(', ') }
