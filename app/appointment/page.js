@@ -1,6 +1,6 @@
 import React from 'react'
 import AppointmentForm from './Form'
-import SpecialistList from '../ui/person/PersonList'
+import SpecialistList from './SpecialistList'
 
 const Home = () => {
   return (
