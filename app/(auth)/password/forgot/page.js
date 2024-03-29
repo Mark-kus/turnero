@@ -1,22 +1,25 @@
-import React from 'react'
-import Label from '../../../ui/Label'
-import UnborderedInput from '../../../ui/UnborderedInput'
-import Button from '../../../ui/Button'
+import React from "react";
 
 const ForgotPassword = () => {
   return (
-    <>
-      <h1 className='text-4xl font-bold'>Forgotten your password?</h1>
-      <p className='mb-6 mt-2'>
-        There is nothing to worry about, we&apos;ll send you a message to help you reset your password.
+    <article>
+      <h1 className="text-4xl font-bold">Forgotten your password?</h1>
+      <p className="mb-8 mt-2">
+        There is nothing to worry about, we&apos;ll send you a message to help
+        you reset your password.
       </p>
-      <label>
-        <Label>Email Address</Label>
-        <UnborderedInput placeholder={'Enter personal or work email address'} />
+      <label className="form-control">
+        <span className="mb-1 text-left">Email Address</span>
+        <input
+          placeholder="Enter personal or work email address"
+          className="input-unbordered"
+        />
       </label>
-      <Button className={'mt-4 w-full'}>Send Reset Link</Button>
-    </>
-  )
-}
+      <button className="btn-h-10 btn-round btn btn-primary mt-4 w-full">
+        Send Reset Link
+      </button>
+    </article>
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

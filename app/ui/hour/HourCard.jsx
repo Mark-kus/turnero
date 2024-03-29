@@ -1,17 +1,17 @@
-import React from 'react'
-import Button from '../Button'
+import React from "react";
 
 const HourCard = ({ hour }) => {
-  const [hours, minutes] = hour.time.toString().match(/.{2}/g)
+  const [hours, minutes] = hour.time.toString().match(/.{2}/g);
   return (
-    <li className='w-full'>
-      <Button
-        className={'btn-outline bg-primary-content bg-opacity-40 h-20 border-none text-primary w-full font-medium'}
-        disabled={hour.taken}>
+    <li className="w-full">
+      <button
+        className="btn-round btn btn-outline btn-primary h-20 w-full border-none bg-white bg-opacity-40 font-medium"
+        disabled={hour.taken}
+      >
         {hours}:{minutes}
-      </Button>
+      </button>
     </li>
-  )
-}
+  );
+};
 
-export default HourCard
+export default HourCard;

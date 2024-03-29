@@ -1,115 +1,73 @@
-import Button from '@/app/ui/Button'
-import LinkButton from '@/app/ui/LinkButton'
-import Card from '@/app/ui/card/Card'
-import CardInformation from '@/app/ui/card/CardInformation'
-import CardSquaredImage from '@/app/ui/card/CardSquaredImage'
-import React from 'react'
-
-const fakeAppointment = {
-  specialist: {
-    avatarUrl: 'https://avatar.com',
-    name: 'Robert California',
-    age: 36,
-    insurance: null,
-    specialty: 'Dentist',
-    location: 'San Francisco',
-    available: ['Mondays', 'Tuesdays', 'Fridays']
-  },
-  datetime: {
-    date: 'Friday 18, January',
-    time: 1600
-  },
-  patient: {
-    avatarUrl: 'https://avatar.com',
-    name: 'John Doe',
-    age: 28,
-    insurance: null,
-    id: 123456789,
-    phone: 1123456789,
-    email: 'johndoe@gmail.com'
-  }
-}
+import Card from "@/app/ui/card/Card";
+import CardSquaredImage from "@/app/ui/card/CardSquaredImage";
+import React from "react";
+import Link from "next/link";
+import { appointment, specialists } from "@/app/seeds";
+import SpecialistInformation from "@/app/ui/card/SpecialistInformation";
+import PatientInformation from "@/app/ui/card/PatientInformation";
 
 const Confirmation = () => {
-  const specialist = {
-    name: `${fakeAppointment.specialist.name}, ${fakeAppointment.specialist.age}`,
-    content: [
-      { name: 'Health Insurance', value: fakeAppointment.specialist.insurance },
-      { name: 'Dentist', value: fakeAppointment.specialist.specialty },
-      { name: 'Location', value: fakeAppointment.specialist.location },
-      { name: 'Available', value: fakeAppointment.specialist.available.join(', ') }
-    ]
-  }
-  const patient = {
-    name: `${fakeAppointment.patient.name}, ${fakeAppointment.patient.age}`,
-    content: [
-      { name: 'ID', value: fakeAppointment.patient.id },
-      { name: 'Health Insurance', value: fakeAppointment.patient.insurance },
-      { name: 'Phone number', value: fakeAppointment.patient.phone },
-      { name: 'Contact email', value: fakeAppointment.patient.email }
-    ]
-  }
-  const [hours, minutes] = fakeAppointment.datetime.time.toString().match(/.{2}/g)
+  const [hours, minutes] = appointment.datetime.time.toString().match(/.{2}/g);
   return (
-    <section className='w-1/2 flex flex-col items-start bg-neutral rounded-md p-8 mx-auto my-10'>
-      <h1 className='text-2xl leading-none mb-4 mt-2'>Estás solicitando un turno con</h1>
-      <div className='w-full'>
-        <h2 className='mt-4 mb-2'>Dentist</h2>
+    <section className="mx-auto my-10 flex w-1/2 flex-col items-start rounded-md bg-neutral p-8">
+      <h1 className="mb-4 mt-2 text-3xl leading-none">
+        Estás solicitando un turno con
+      </h1>
+      <div className="w-full">
+        <h2 className="mb-2 mt-4">Dentist</h2>
         <Card
-          slot={{
-            left: <CardSquaredImage />,
-            right: (
-              <CardInformation
-                title={specialist.name}
-                content={specialist.content}
-              />
-            )
-          }}
+          leftSlot={<CardSquaredImage />}
+          rightSlot={
+            <div className="m-4">
+              <SpecialistInformation person={specialists[0]} />
+            </div>
+          }
         />
       </div>
-      <div className='w-full flex gap-4 mt-4'>
-        <div className='w-full'>
-          <h2 className='mb-2'>Date</h2>
-          <div className='bg-base-200 w-full py-4 text-center text-sm'>{fakeAppointment.datetime.date}</div>
+      <div className="mt-4 flex w-full gap-4">
+        <div className="w-full">
+          <h2 className="mb-2">Date</h2>
+          <div className="w-full bg-base-200 py-4 text-center text-sm">
+            {appointment.datetime.date}
+          </div>
         </div>
-        <div className='w-full'>
-          <h2 className='mb-2'>Time</h2>
-          <div className='bg-base-200 w-full py-4 text-center text-sm'>
+        <div className="w-full">
+          <h2 className="mb-2">Time</h2>
+          <div className="w-full bg-base-200 py-4 text-center text-sm">
             {hours}:{minutes}
           </div>
         </div>
       </div>
-      <div className='w-full'>
-        <h2 className='mt-4 mb-2'>Patient</h2>
+      <div className="w-full">
+        <h2 className="mb-2 mt-4">Patient</h2>
         <Card
-          slot={{
-            left: <CardSquaredImage />,
-            right: (
-              <>
-                <CardInformation
-                  title={patient.name}
-                  content={patient.content}
-                />
-                <LinkButton
-                  href={'/appointment'}
-                  className='bg-transparent text-black border-2 border-base-300 hover:bg-base-300 hover:text-black'>
-                  The appointment is for a family member
-                </LinkButton>
-              </>
-            )
-          }}
+          leftSlot={<CardSquaredImage />}
+          rightSlot={
+            <div className="m-4">
+              <PatientInformation person={appointment.patient} />
+              <Link
+                href={"/appointment"}
+                className="btn-round btn-base-300 btn mt-2 h-8 min-h-8 border-2 border-base-300 text-opacity-60 hover:bg-base-300 hover:text-black"
+              >
+                The appointment is for a family member
+              </Link>
+            </div>
+          }
         />
       </div>
-      <div className='flex justify-center gap-4 w-full mt-32'>
-        <LinkButton
+      <div className="mt-32 flex w-full justify-center gap-4">
+        <Link
           href={`/appointment/1`}
-          className={'btn-primary text-primary bg-white border-none w-full shrink'}>
+          className="btn-round btn-h-10 btn btn-primary w-full shrink border-none bg-white text-primary hover:text-primary-content"
+        >
           Go back
-        </LinkButton>
-        <Button className={' w-full shrink'}>Confirm appointment</Button>
+        </Link>
+        <button className={"btn-h-10 btn-round btn btn-primary w-full shrink"}>
+          Confirm appointment
+        </button>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Confirmation
+export default Confirmation;

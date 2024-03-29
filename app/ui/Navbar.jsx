@@ -1,37 +1,38 @@
-import React from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
   return (
-    <div className='navbar bg-base-300 px-8'>
-      <div className='flex-1'>
-        <Link
-          href='/appointment'
-          className='btn btn-ghost text-xl'>
+    <div className="navbar bg-base-300 px-8">
+      <div className="flex-1">
+        <Link href="/appointment" className="btn btn-ghost text-xl">
           Turnero
         </Link>
       </div>
-      <div className='flex-none gap-6'>
+      <div className="flex-none gap-6">
         <Link
-          className='link link-hover text-primary text-sm font-medium'
-          href='/'>
+          className="link-hover link text-sm font-medium text-primary"
+          href="/appointment/booked"
+        >
           View appointments
         </Link>
         <Link
-          className='link link-hover text-primary text-sm font-medium'
-          href='/appointment'>
+          className="link-hover link text-sm font-medium text-primary"
+          href="/appointment"
+        >
           Book appointments
         </Link>
-        <div className='dropdown dropdown-end'>
+        <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
-            role='button'
-            className='btn btn-ghost btn-circle avatar'>
-            <div className='w-10 rounded-full'>
+            role="button"
+            className="avatar btn btn-circle btn-ghost"
+          >
+            <div className="w-10 rounded-full">
               <Image
-                alt='Tailwind CSS Navbar component'
-                src={'/vercel.svg'}
+                alt="Tailwind CSS Navbar component"
+                src={"/google.svg"}
                 width={40}
                 height={40}
               />
@@ -39,11 +40,12 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className='menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52'>
+            className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
+          >
             <li>
-              <a className='justify-between'>
+              <a className="justify-between">
                 Profile
-                <span className='badge'>New</span>
+                <span className="badge">New</span>
               </a>
             </li>
             <li>
@@ -56,7 +58,7 @@ const Navbar = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

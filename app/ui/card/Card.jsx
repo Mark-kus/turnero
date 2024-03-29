@@ -1,12 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const Card = ({ slot }) => {
+const Card = ({ className, rightSlot, leftSlot }) => {
   return (
-    <div className='card card-side w-full rounded-none bg-base-200'>
-      {slot.left}
-      <div className='card-body py-4 justify-center'>{slot.right}</div>
+    <div className={`card card-side rounded-none ${className}`}>
+      {leftSlot}
+      {rightSlot}
     </div>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;

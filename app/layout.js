@@ -2,7 +2,8 @@ import './globals.css'
 import { inter } from './ui/fonts'
 
 export const metadata = {
-  title: 'Turnero'
+  title: 'Turnero',
+  description: 'Saca turnos con tus doctores favoritos con Turnero'
 }
 
 export default function RootLayout({ children }) {

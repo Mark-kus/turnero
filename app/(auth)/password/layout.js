@@ -1,11 +1,13 @@
-import React from 'react'
+import React from "react";
 
 const PasswordResetLayout = ({ children }) => {
   return (
-    <section className='h-screen w-screen bg-neutral flex justify-center items-center'>
-      <div className='border-2 border-base-300 bg-white p-16 text-center max-w-screen-sm'>{children}</div>
+    <section className="flex h-screen w-screen items-center justify-center bg-neutral">
+      <main className="max-w-screen-sm border-2 border-base-300 bg-white p-16 text-center">
+        {children}
+      </main>
     </section>
-  )
-}
+  );
+};
 
-export default PasswordResetLayout
+export default PasswordResetLayout;

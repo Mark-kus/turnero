@@ -1,14 +1,13 @@
-import React from 'react'
-import Button from '../Button'
+import React from "react";
 
 const DateCard = ({ date }) => {
   return (
-    <li className='my-4'>
-      <Button className={'btn-outline bg-primary-content bg-opacity-40 border-none text-primary w-full font-medium'}>
+    <li className="my-4">
+      <button className="btn-round btn btn-outline btn-primary w-full border-none bg-white bg-opacity-40 font-medium">
         {date}
-      </Button>
+      </button>
     </li>
-  )
-}
+  );
+};
 
-export default DateCard
+export default DateCard;
