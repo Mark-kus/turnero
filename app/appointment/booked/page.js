@@ -1,7 +1,11 @@
+"use client";
 import { appointments } from "@/app/seeds";
 import AppointmentInformation from "@/app/ui/card/AppointmentInformation";
 import Card from "@/app/ui/card/Card";
 import CardRoundedImage from "@/app/ui/card/CardRoundedImage";
+import Cancel from "@/app/ui/modal/Cancel";
+import Delete from "@/app/ui/modal/Delete";
+import Review from "@/app/ui/modal/Review";
 import React from "react";
 
 const BookedAppointments = () => {
@@ -33,6 +37,9 @@ const BookedAppointments = () => {
                           disabled={
                             appointment.content.confirmation === "Denied"
                           }
+                          onClick={() =>
+                            document.getElementById("cancel_modal").showModal()
+                          }
                           className="btn-round btn-h-8 btn-base-300 btn w-full shrink border-2 border-base-300 text-opacity-60 hover:bg-base-300 hover:text-black"
                         >
                           Cancel
@@ -62,10 +69,20 @@ const BookedAppointments = () => {
                     <div className="m-2 w-full">
                       <AppointmentInformation appointment={appointment} />
                       <div className="mt-4 flex w-full gap-2">
-                        <button className="btn-round btn-h-8 btn-base-300 btn w-full shrink border-2 border-base-300 text-opacity-60 hover:bg-base-300 hover:text-black">
+                        <button
+                          onClick={() =>
+                            document.getElementById("delete_modal").showModal()
+                          }
+                          className="btn-round btn-h-8 btn-base-300 btn w-full shrink border-2 border-base-300 text-opacity-60 hover:bg-base-300 hover:text-black"
+                        >
                           Delete
                         </button>
-                        <button className="btn-round btn-h-8 btn btn-outline btn-primary w-full shrink border-none bg-white bg-opacity-40">
+                        <button
+                          onClick={() =>
+                            document.getElementById("review_modal").showModal()
+                          }
+                          className="btn-round btn-h-8 btn btn-outline btn-primary w-full shrink border-none bg-white bg-opacity-40"
+                        >
                           Review
                         </button>
                       </div>
@@ -77,6 +94,9 @@ const BookedAppointments = () => {
           })}
         </ul>
       </section>
+      <Review />
+      <Cancel />
+      <Delete />
     </main>
   );
 };

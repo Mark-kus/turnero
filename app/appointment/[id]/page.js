@@ -4,9 +4,12 @@ import React from "react";
 import Link from "next/link";
 
 const AppointmentDatetime = () => {
+  // If appointment id exists, then choose reschedule, if not, pick appointment
   return (
     <main className="m-10 flex flex-col">
-      <h1 className="mb-8 text-3xl">Pick your appointment</h1>
+      <h1 className="mb-8 text-3xl">
+        {"Pick your appointment" || "Reschedule appointment"}
+      </h1>
       <div className="flex gap-4">
         <DatePicker />
         <HourPicker />
