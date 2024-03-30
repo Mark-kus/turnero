@@ -1,8 +1,8 @@
 import React from "react";
-import Card from "../ui/card/Card";
-import CardSquaredImage from "../ui/card/CardSquaredImage";
+import Card from "./card/Card";
+import CardSquaredImage from "./card/CardSquaredImage";
 import Link from "next/link";
-import SpecialistInformation from "../ui/card/SpecialistInformation";
+import SpecialistInformation from "./card/SpecialistInformation";
 import { specialists } from "../seeds";
 
 const SpecialistList = () => {
@@ -12,12 +12,13 @@ const SpecialistList = () => {
         return (
           <Card
             key={index}
+            className={"bg-base-200"}
             leftSlot={<CardSquaredImage />}
             rightSlot={
               <div className="m-4 flex w-full flex-col">
                 <SpecialistInformation person={person} />
                 <Link
-                  href={`/appointment/${person.id}`}
+                  href={`/appointment/${person.id}/schedule`}
                   className="btn-h-10 btn-round btn mt-2 w-full border-none bg-white bg-opacity-40 font-medium text-primary"
                 >
                   Select

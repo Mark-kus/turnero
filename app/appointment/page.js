@@ -1,7 +1,7 @@
 import React from 'react'
-import AppointmentForm from './Form'
-import SpecialistList from './SpecialistList'
-import Modal from '../ui/modal/Modal'
+import AppointmentForm from '../ui/AppointmentForm'
+import SpecialistList from '../ui/SpecialistList'
+import Modal from '../ui/modal/Confirmed'
 
 const Home = () => {
   return (
