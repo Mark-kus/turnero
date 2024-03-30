@@ -1,7 +1,7 @@
 import AppointmentsList from "@/app/ui/AppointmentsList";
-import Cancel from "@/app/ui/modal/Cancel";
-import Delete from "@/app/ui/modal/Delete";
-import Review from "@/app/ui/modal/Review";
+import Cancel from "@/app/ui/modals/Cancel";
+import Delete from "@/app/ui/modals/Delete";
+import Review from "@/app/ui/modals/Review";
 import React from "react";
 
 const BookedAppointments = () => {

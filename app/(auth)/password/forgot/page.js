@@ -1,3 +1,4 @@
+import ForgotPasswordForm from "@/app/ui/forms/ForgotPassword";
 import React from "react";
 
 const ForgotPassword = () => {
@@ -8,16 +9,7 @@ const ForgotPassword = () => {
         There is nothing to worry about, we&apos;ll send you a message to help
         you reset your password.
       </p>
-      <label className="form-control">
-        <span className="mb-1 text-left">Email Address</span>
-        <input
-          placeholder="Enter personal or work email address"
-          className="input-unbordered"
-        />
-      </label>
-      <button className="btn-h-10 btn-round btn btn-primary mt-4 w-full">
-        Send Reset Link
-      </button>
+      <ForgotPasswordForm />
     </article>
   );
 };

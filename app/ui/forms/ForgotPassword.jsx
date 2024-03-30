@@ -1,0 +1,20 @@
+import React from "react";
+
+const ForgotPasswordForm = () => {
+  return (
+    <form>
+      <label className="form-control">
+        <span className="mb-1 text-left">Email Address</span>
+        <input
+          placeholder="Enter personal or work email address"
+          className="input-unbordered"
+        />
+      </label>
+      <button className="btn-h-10 btn-round btn btn-primary mt-4 w-full">
+        Send Reset Link
+      </button>
+    </form>
+  );
+};
+
+export default ForgotPasswordForm;

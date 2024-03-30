@@ -1,5 +1,5 @@
 import React from "react";
-import ScheduleForm from "@/app/ui/ScheduleForm";
+import ScheduleForm from "@/app/ui/forms/Schedule";
 
 const AppointmentDatetime = () => {
   return (
