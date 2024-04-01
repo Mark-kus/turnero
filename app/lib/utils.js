@@ -1,4 +1,4 @@
-const getColorByConfirmation = (confirmation) => {
+export const getColorByConfirmation = (confirmation) => {
   switch (confirmation) {
     case "Approved":
       return "#009951";
@@ -8,5 +8,3 @@ const getColorByConfirmation = (confirmation) => {
       return "#CE9700";
   }
 };
-
-export default getColorByConfirmation;

@@ -3,9 +3,11 @@ import Card from "./card/Card";
 import CardSquaredImage from "./card/CardSquaredImage";
 import Link from "next/link";
 import SpecialistInformation from "./card/SpecialistInformation";
-import { specialists } from "../seeds";
+import { fetchProfessionals } from "../lib/data/professionals";
 
-const SpecialistList = () => {
+const SpecialistList = async () => {
+  const specialists = await fetchProfessionals();
+
   return (
     <section className="flex w-full flex-col gap-4 overflow-y-auto">
       {specialists.map((person, index) => {

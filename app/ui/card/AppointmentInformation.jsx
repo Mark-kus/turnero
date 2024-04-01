@@ -1,4 +1,4 @@
-import getColorByConfirmation from "@/app/helpers/getColorByConfirmation";
+import { getColorByConfirmation } from "@/app/lib/utils";
 import React from "react";
 
 const AppointmentInformation = ({ appointment }) => {
