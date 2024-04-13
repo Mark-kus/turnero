@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { signOut } from "@/auth";
 
 const Navbar = () => {
   return (
@@ -46,7 +47,14 @@ const Navbar = () => {
               <Link href={"/profile"}>Profile</Link>
             </li>
             <li>
-              <Link href={"/login"}>Logout</Link>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut();
+                }}
+              >
+                <button>Sign out</button>
+              </form>
             </li>
           </ul>
         </div>
