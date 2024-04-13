@@ -90,8 +90,8 @@ CREATE TABLE IF NOT EXISTS "availabilities" (
 
 CREATE TABLE IF NOT EXISTS "unavailabilities" (
     "unavailability_id"  INTEGER PRIMARY KEY,
-    "start"  DATE NOT NULL, 
-	"end" DATE NOT NULL,
+    "start_date"  DATE NOT NULL, 
+	"end_date" DATE,
     "professional_id"  INTEGER NOT NULL,
     "created_at"  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY("professional_id") REFERENCES "professionals"("professional_id")
