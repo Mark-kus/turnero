@@ -5,7 +5,8 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnAppointment = nextUrl.pathname.startsWith("/appointment");
+      // const isOnAppointment = nextUrl.pathname.startsWith("/appointment");
+      const isOnAppointment = true;
       if (isOnAppointment) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
