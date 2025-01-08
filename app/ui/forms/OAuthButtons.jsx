@@ -1,5 +1,7 @@
 import React from "react";
 import Image from "next/image";
+import google from "@public/google.svg";
+import apple from "@public/apple.svg";
 
 const OAuthButtons = () => {
   return (
@@ -8,7 +10,7 @@ const OAuthButtons = () => {
         <Image
           width={24}
           height={24}
-          src={"/google.svg"}
+          src={google}
           alt="Google brand icon"
         />
         Log in with Google
@@ -17,7 +19,7 @@ const OAuthButtons = () => {
         <Image
           width={24}
           height={24}
-          src={"/apple.svg"}
+          src={apple}
           alt="Apple brand icon"
         />
         Log in with Apple
