@@ -1,5 +1,5 @@
-import ScheduleForm from "@/app/ui/forms/Schedule";
 import React from "react";
+import ScheduleForm from "@/app/ui/forms/Schedule";
 
 const Reschedule = () => {
   return (

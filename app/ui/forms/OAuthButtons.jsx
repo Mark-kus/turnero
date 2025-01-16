@@ -1,7 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import google from "@public/google.svg";
-import apple from "@public/apple.svg";
+
+import google from "@public/provider/google.svg";
+import apple from "@public/provider/apple.svg";
 
 const OAuthButtons = () => {
   return (

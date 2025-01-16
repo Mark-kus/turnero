@@ -1,13 +1,13 @@
-import React from 'react'
-import Navbar from '../ui/Navbar'
+import React from "react";
+import Navbar from "../ui/Navbar";
 
 const UserLayout = ({ children }) => {
   return (
-    <main>
+    <>
       <Navbar />
-      <div>{children}</div>
-    </main>
-  )
-}
+      {children}
+    </>
+  );
+};
 
-export default UserLayout
+export default UserLayout;

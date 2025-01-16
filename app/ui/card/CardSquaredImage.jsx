@@ -1,8 +1,15 @@
+import Image from "next/image";
+
+import defaultProfile from "@public/default/profile.svg";
+
 const CardSquaredImage = ({ href }) => {
+  const srcImage = href ? href : defaultProfile;
   return (
-    <figure className="bg-white bg-opacity-30 p-2">
-      <div className="m-2 h-full w-60 rounded-lg border-2 border-base-300 bg-base-200"></div>
-    </figure>
+    <div className="flex items-center justify-center w-60 border-2 rounded-lg border-base-300">
+      <figure>
+        <Image src={srcImage} alt="Profile image" width={20} height={20} />
+      </figure>
+    </div>
   );
 };
 

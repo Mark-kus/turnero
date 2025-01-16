@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "@/auth";
 
+import defaultProfile from "@/public/default/profile.svg";
+
 const Navbar = () => {
   return (
     <div className="navbar bg-base-300 px-8">
@@ -33,7 +35,7 @@ const Navbar = () => {
             <div className="w-10 rounded-full">
               <Image
                 alt="Tailwind CSS Navbar component"
-                src={"/google.svg"}
+                src={defaultProfile}
                 width={40}
                 height={40}
               />

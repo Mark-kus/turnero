@@ -11,10 +11,10 @@ const SpecialistInformation = ({ person }) => {
           Health insurance: {person.insurance ?? "None"}
         </li>
         <li className="text-sm">
-          Specialties: {person.specialties.join(", ")}
+          Specialties: {person.specialties}
         </li>
         <li className="text-sm">Location: {person.location}</li>
-        <li className="text-sm">Available: {person.available.join(", ")}</li>
+        <li className="text-sm">Available: {person.available}</li>
       </ul>
     </div>
   );

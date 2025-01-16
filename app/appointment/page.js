@@ -5,7 +5,7 @@ import Modal from '../ui/modals/Confirmed'
 
 const Home = () => {
   return (
-    <main className='flex justify-between max-h-2xl gap-10 m-10'>
+    <main className='flex justify-between gap-10 m-10'>
       <AppointmentForm />
       <SpecialistList />
       <Modal />

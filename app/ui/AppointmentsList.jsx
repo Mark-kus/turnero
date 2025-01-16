@@ -34,7 +34,7 @@ const AppointmentsList = () => {
                           Cancel
                         </button>
                         <Link
-                          href={`/appointment/1/reschedule`}
+                          href={`/appointment/1/schedule/1`}
                           className="btn-round btn-h-8 btn btn-outline btn-primary w-full shrink border-none bg-white bg-opacity-40"
                         >
                           Reschedule

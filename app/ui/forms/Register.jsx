@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
+import eyeClosed from "@/public/eye/closed.svg";
+import eyeOpened from "@/public/eye/opened.svg";
+
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -44,7 +47,7 @@ const RegisterForm = () => {
                 width={22}
                 height={22}
                 className="mr-[1px] opacity-50"
-                src={"/eye/opened.svg"}
+                src={eyeOpened}
                 alt="Can view password icon"
               />
             ) : (
@@ -52,7 +55,7 @@ const RegisterForm = () => {
                 width={24}
                 height={24}
                 className="opacity-50"
-                src={"/eye/closed.svg"}
+                src={eyeClosed}
                 alt="Can't view password icon"
               />
             )}
@@ -60,7 +63,7 @@ const RegisterForm = () => {
         </div>
       </label>
       <button className="btn-round btn-h-10 btn btn-primary mb-10 mt-4 w-full">
-        Button Text
+        Registrarme
       </button>
     </form>
   );

@@ -2,8 +2,10 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 
+import defaultProfile from "@/public/default/profile.svg";
+
 const ProfileForm = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(defaultProfile);
   const fileInputRef = useRef(null);
 
   const handleFileUpload = () => {
@@ -29,14 +31,14 @@ const ProfileForm = () => {
               width={100}
               height={100}
               className="object-cover"
-              src={selectedImage ? selectedImage : "/google.svg"}
+              src={selectedImage}
               alt="Foto de perfíl del usuario"
             />
           </div>
           <button
             type="button"
             onClick={handleFileUpload}
-            className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black bg-opacity-60 text-sm font-medium text-black opacity-0 transition-opacity duration-300 hover:opacity-100"
+            className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-white bg-opacity-70 text-sm font-medium text-black opacity-0 transition-opacity duration-300 hover:opacity-100"
           >
             Editar
           </button>

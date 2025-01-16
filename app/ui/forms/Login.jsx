@@ -6,6 +6,9 @@ import React, { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "@/app/lib/actions/users";
 
+import eyeClosed from "@public/eye/closed.svg";
+import eyeOpened from "@public/eye/opened.svg";
+
 const LoginForm = () => {
   const [errorMessage, dispatch] = useFormState(authenticate, null);
   const [showPassword, setShowPassword] = useState(false);
@@ -44,14 +47,14 @@ const LoginForm = () => {
                 width={22}
                 height={22}
                 className="mr-[1px] opacity-50"
-                src={"/eye/opened.svg"}
+                src={eyeOpened}
                 alt="Can view password icon"
               />
             ) : (
               <Image
                 width={24}
                 height={24}
-                src={"/eye/closed.svg"}
+                src={eyeClosed}
                 className="opacity-50"
                 alt="Can't view password icon"
               />
