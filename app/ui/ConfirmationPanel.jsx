@@ -17,9 +17,13 @@ const ConfirmationPanel = () => {
       <div className="w-full">
         <h2 className="mb-2 mt-4">Dentist</h2>
         <Card
-          leftSlot={<CardSquaredImage />}
+          leftSlot={
+            <div className="bg-[#f7f7f7] p-4">
+              <CardSquaredImage />
+            </div>
+          }
           rightSlot={
-            <div className="m-4">
+            <div className="w-full bg-base-300 p-4">
               <SpecialistInformation person={specialists[0]} />
             </div>
           }
@@ -42,9 +46,13 @@ const ConfirmationPanel = () => {
       <div className="w-full">
         <h2 className="mb-2 mt-4">Patient</h2>
         <Card
-          leftSlot={<CardSquaredImage />}
+          leftSlot={
+            <div className="bg-[#f7f7f7] p-4">
+              <CardSquaredImage />
+            </div>
+          }
           rightSlot={
-            <div className="m-4">
+            <div className="w-full bg-base-300 p-4">
               <PatientInformation person={appointment.patient} />
               <Link
                 href={"/appointment"}

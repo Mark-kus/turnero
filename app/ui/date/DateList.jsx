@@ -12,13 +12,7 @@ const fakeDates = [
   'Sunday 20, January',
   'Monday 21, January',
   'Tuesday 22, January',
-  'Wednesday 23, January',
-  'Thursday 24, January',
-  'Saturday 25, January',
-  'Sunday 26, January',
-  'Monday 27, January',
-  'Tuesday 28, January',
-  'Wednesday 29, January'
+  'Wednesday 23, January'
 ]
 
 const DateList = () => {

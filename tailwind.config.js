@@ -12,7 +12,7 @@ module.exports = {
       },
       height: {
         "vh-nav": "calc(100vh - 4rem)",
-      }
+      },
     },
   },
   daisyui: {
