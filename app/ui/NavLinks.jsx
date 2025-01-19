@@ -16,8 +16,9 @@ const links = [
 
 const NavLinks = () => {
   const pathname = usePathname();
-  return links.map((link) => (
+  return links.map((link, i) => (
     <Link
+      key={i}
       className={`link-hover link text-sm font-medium text-primary
               ${pathname === link.href ? "underline" : ""}
               `}

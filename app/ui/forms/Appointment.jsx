@@ -8,26 +8,25 @@ const AppointmentForm = () => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleChange = ({ target: { name, value } }) => {
-    const params = new URLSearchParams(searchParams);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    const elements = Array.from(event.target.elements);
+    const filters = elements.map(({ name, value }) => [name, value]);
+    const newQueryParams = filters
+      .filter(([_, value]) => value)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
 
-    if (value) {
-      params.set(name, value);
-    } else {
-      params.delete(name);
-    }
-
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${newQueryParams}`);
   };
 
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <label className="form-control mt-6 w-full">
         <span className="my-2 text-xs opacity-50">Specialty</span>
         <input
           name="specialty"
           defaultValue={searchParams.get("specialty")?.toString()}
-          onChange={handleChange}
           className="input-minimal"
           placeholder="Placeholder/Input text"
         />
@@ -37,7 +36,6 @@ const AppointmentForm = () => {
         <input
           name="name"
           defaultValue={searchParams.get("name")?.toString()}
-          onChange={handleChange}
           className="input-minimal"
           placeholder="Placeholder/Input text"
         />
@@ -47,12 +45,14 @@ const AppointmentForm = () => {
         <input
           name="insurance"
           defaultValue={searchParams.get("insurance")?.toString()}
-          onChange={handleChange}
           className="input-minimal"
           placeholder="Placeholder/Input text"
         />
       </label>
-      <button className="btn-round btn-h-10 btn btn-primary mt-6 w-full text-xs font-medium">
+      <button
+        type="submit"
+        className="btn btn-primary btn-h-10 btn-round mt-6 w-full text-xs font-medium"
+      >
         Label
       </button>
     </form>

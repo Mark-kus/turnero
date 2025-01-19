@@ -6,8 +6,8 @@ import SpecialistInformation from "./card/SpecialistInformation";
 import NoResults from "./NoResults";
 import { fetchProfessionals } from "../lib/data";
 
-const SpecialistList = async () => {
-  const professionals = await fetchProfessionals();
+const SpecialistList = async ({ specialty, name, insurance }) => {
+  const professionals = await fetchProfessionals(specialty, name, insurance);
 
   return (
     <section className="flex w-full flex-col gap-4 overflow-y-auto">
@@ -23,7 +23,7 @@ const SpecialistList = async () => {
                   <SpecialistInformation person={person} />
                   <Link
                     href={`/appointment/${person.id}/schedule`}
-                    className="btn-h-10 btn-round btn mt-2 w-full border-none bg-white bg-opacity-40 font-medium text-primary"
+                    className="btn btn-h-10 btn-round mt-2 w-full border-none bg-white bg-opacity-40 font-medium text-primary"
                   >
                     Select
                   </Link>

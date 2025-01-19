@@ -6,7 +6,10 @@ import AppointmentsListSkeleton from "../ui/skeletons/SpecialistsListSkeleton";
 import Image from "next/image";
 import defaultImage from "@public/default/image.svg";
 
-const ProfessionalsSearch = async () => {
+const ProfessionalsSearch = async ({ searchParams }) => {
+  const specialty = searchParams?.specialty || "";
+  const name = searchParams?.name || "";
+  const insurance = searchParams?.insurance || "";
   return (
     <main className="m-10 flex justify-between gap-10">
       <section className="hero max-w-xl bg-neutral">
@@ -27,12 +30,19 @@ const ProfessionalsSearch = async () => {
                 height={20}
               />
             </div>
-            <AppointmentForm />{" "}
+            <AppointmentForm />
           </div>
         </div>
       </section>
-      <Suspense fallback={<AppointmentsListSkeleton />}>
-        <SpecialistList />
+      <Suspense
+        key={specialty + name + insurance}
+        fallback={<AppointmentsListSkeleton />}
+      >
+        <SpecialistList
+          specialty={specialty}
+          name={name}
+          insurance={insurance}
+        />
       </Suspense>
       <Modal />
     </main>
