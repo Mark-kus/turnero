@@ -6,12 +6,12 @@ const NoResults = ({ children }) => {
   return (
     <div className="hero h-full">
       <div className="hero-content text-center">
-        <div className="max-w-md">
+        <div className="flex max-w-md flex-col items-center justify-center">
           <Image
             src={NoResultsImage}
             alt="No Results"
-            width={500}
-            height={500}
+            width={300}
+            height={300}
           />
           {children}
         </div>

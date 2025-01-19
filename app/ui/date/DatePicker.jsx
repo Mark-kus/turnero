@@ -10,7 +10,7 @@ const DatePicker = () => {
     <section className="flex w-2/3 max-w-md flex-col items-start rounded-md bg-neutral p-8">
       <h2 className="mb-6 text-3xl leading-none">Seleccione una fecha</h2>
       <div role="tablist" className="tabs w-full justify-between">
-        <a role="tab" className="tab p-0 text-primary">
+        <button role="tab" className="tab p-0 text-primary">
           <span className="mr-1">
             <Image
               src={leftThinArrow}
@@ -20,14 +20,14 @@ const DatePicker = () => {
             />
           </span>
           Diciembre
-        </a>
-        <a
+        </button>
+        <button
           role="tab"
           className="tab tab-active p-0 text-lg font-bold text-primary"
         >
           Enero
-        </a>
-        <a role="tab" className="tab items-center p-0 text-primary">
+        </button>
+        <button role="tab" className="tab items-center p-0 text-primary">
           Febrero
           <span className="ml-1">
             <Image
@@ -37,7 +37,7 @@ const DatePicker = () => {
               height={6}
             />
           </span>
-        </a>
+        </button>
       </div>
       <DateList />
     </section>

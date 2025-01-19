@@ -4,15 +4,15 @@ import Link from "next/link";
 
 const Modal = ({ open, onClose }) => {
   return (
-    <div>
+    <>
       <dialog id="confirmed_modal" className="modal">
         <div className="modal-box rounded-none bg-neutral">
           <h3 className="text-2xl font-medium">
             Your appointment is confirmed
           </h3>
-          <p className="pt-2 text-sm">
+          <p className="pt-2 text-xs">
             You&apos;ll have to wait for the dentist confirmation via email. You
-            can also check your appintment status in “View appointment”.
+            can also check your appointment status in “View appointment”.
           </p>
           <div className="flex gap-4 pt-6">
             <button
@@ -33,7 +33,7 @@ const Modal = ({ open, onClose }) => {
           <button>close</button>
         </form>
       </dialog>
-    </div>
+    </>
   );
 };
 
