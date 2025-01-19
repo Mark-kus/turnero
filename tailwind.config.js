@@ -32,5 +32,28 @@ module.exports = {
       },
     ],
   },
-  plugins: [require("daisyui")],
+  plugins: [
+    require("daisyui"),
+    function ({ addComponents }) {
+      addComponents({
+        ".input-unbordered": {
+          "@apply input w-full rounded-none border-b border-b-base-300 bg-neutral":
+            {},
+        },
+        ".input-minimal": {
+          "@apply input h-10 w-full border-2 border-base-300 bg-neutral text-sm":
+            {},
+        },
+        ".btn-h-10": {
+          "@apply h-10 min-h-10": {},
+        },
+        ".btn-h-8": {
+          "@apply h-8 min-h-8": {},
+        },
+        ".btn-round": {
+          "@apply rounded-xl shadow-none": {},
+        },
+      });
+    },
+  ],
 };

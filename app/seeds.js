@@ -5,7 +5,7 @@ export const appointments = {
         specialist: "Roberto California",
         patient: "John Doe",
         location: "Smiths 500, San Francisco",
-        confirmation: "Approved",
+        confirmation: 3,
       },
       datetime: {
         date: "Monday 30, January",
@@ -17,7 +17,7 @@ export const appointments = {
         specialist: "Roberto California",
         patient: "John Doe",
         location: "Smiths 500, San Francisco",
-        confirmation: "Denied",
+        confirmation: 2,
       },
       datetime: {
         date: "Monday 30, January",
@@ -29,7 +29,7 @@ export const appointments = {
         specialist: "Roberto California",
         patient: "John Doe",
         location: "Smiths 500, San Francisco",
-        confirmation: "Waiting",
+        confirmation: 1,
       },
       datetime: {
         date: "Monday 30, January",
@@ -43,7 +43,7 @@ export const appointments = {
         specialist: "Roberto California",
         patient: "John Doe",
         location: "Smiths 500, San Francisco",
-        confirmation: "Approved",
+        confirmation: 2,
       },
       datetime: {
         date: "Monday 30, January",
@@ -55,7 +55,7 @@ export const appointments = {
         specialist: "Roberto California",
         patient: "John Doe",
         location: "Smiths 500, San Francisco",
-        confirmation: "Approved",
+        confirmation: 2,
       },
       datetime: {
         date: "Monday 30, January",
@@ -64,6 +64,7 @@ export const appointments = {
     },
   ],
 };
+
 export const appointment = {
   specialistID: 1,
   datetime: {

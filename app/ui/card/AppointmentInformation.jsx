@@ -1,29 +1,17 @@
-import { getColorByConfirmation } from "@/app/lib/utils";
+import { statusOfAppointment } from "@/app/constants";
 import React from "react";
 
-const PENDING = "Pending";
-const APPROVED = "Approved";
-const DENIED = "Denied";
-const COMPLETED = "Completed";
-const CANCELLED = "Cancelled";
-
 const StatusEnum = ({ status }) => {
-  if (status === PENDING) {
-    return <span className="text-yellow-600">Waiting</span>;
-  }
-  if (status === APPROVED) {
-    return <span className="text-green-600">Approved</span>;
-  }
-  if (status === DENIED) {
-    return <span className="text-red-600">Denied</span>;
-  }
-  if (status === COMPLETED) {
-    return <span className="text-blue-600">Completed</span>;
-  }
-  if (status === CANCELLED) {
-    return <span className="text-red-600">Cancelled</span>;
-  }
-  return <span>{status}</span>;
+  const statusText = statusOfAppointment[status];
+  const statusClass = {
+    Pending: "text-yellow-600",
+    Approved: "text-green-600",
+    Denied: "text-red-600",
+    Completed: "text-blue-600",
+    Cancelled: "text-red-600",
+  };
+
+  return <span className={statusClass[statusText]}>{statusText}</span>;
 };
 
 const AppointmentInformation = ({ appointment }) => {

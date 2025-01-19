@@ -4,15 +4,15 @@ import CardSquaredImage from "./card/CardSquaredImage";
 import Link from "next/link";
 import SpecialistInformation from "./card/SpecialistInformation";
 import NoResults from "./NoResults";
+import { fetchProfessionals } from "../lib/data";
 
 const SpecialistList = async () => {
-  // const specialists = await fetchProfessionals();
-  const specialists = [];
+  const professionals = await fetchProfessionals();
 
   return (
     <section className="flex w-full flex-col gap-4 overflow-y-auto">
-      {!!specialists.length ? (
-        specialists.map((person, index) => {
+      {!!professionals.length ? (
+        professionals.map((person, index) => {
           return (
             <Card
               key={index}

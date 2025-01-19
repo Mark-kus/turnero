@@ -1,16 +1,22 @@
-import React from 'react'
-import AppointmentForm from '../ui/forms/Appointment'
-import SpecialistList from '../ui/SpecialistList'
-import Modal from '../ui/modals/Confirmed'
+import React, { Suspense } from "react";
+import AppointmentForm from "../ui/forms/Appointment";
+import SpecialistList from "../ui/SpecialistList";
+import Modal from "../ui/modals/Confirmed";
+import { fetchInsurances, fetchSpecialties } from "../lib/data";
+import AppointmentsListSkeleton from "../ui/skeletons/SpecialistsListSkeleton";
 
-const Home = () => {
+const ProfessionalsSearch = async () => {
+  await fetchInsurances();
+  await fetchSpecialties();
   return (
-    <main className='flex justify-between gap-10 m-10'>
+    <main className="m-10 flex justify-between gap-10">
       <AppointmentForm />
-      <SpecialistList />
+      <Suspense fallback={<AppointmentsListSkeleton />}>
+        <SpecialistList />
+      </Suspense>
       <Modal />
     </main>
-  )
-}
+  );
+};
 
-export default Home
+export default ProfessionalsSearch;
