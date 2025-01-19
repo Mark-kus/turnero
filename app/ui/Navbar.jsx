@@ -4,6 +4,7 @@ import Image from "next/image";
 import { signOut } from "@/auth";
 
 import defaultProfile from "@/public/default/profile.svg";
+import NavLinks from "./NavLinks";
 
 const Navbar = () => {
   return (
@@ -14,18 +15,7 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex-none gap-6">
-        <Link
-          className="link-hover link text-sm font-medium text-primary"
-          href="/appointment/booked"
-        >
-          View appointments
-        </Link>
-        <Link
-          className="link-hover link text-sm font-medium text-primary"
-          href="/appointment"
-        >
-          Book appointments
-        </Link>
+        <NavLinks />
         <div className="dropdown dropdown-end">
           <div
             tabIndex={0}
