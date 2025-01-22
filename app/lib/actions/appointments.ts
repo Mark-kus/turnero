@@ -1,6 +1,11 @@
 "use server";
 
-const FormSchema = z.object({
+import { z } from "zod";
+import { sql } from "@vercel/postgres";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+const CreateInvoiceSchema = z.object({
   id: z.string(),
   customerId: z.string({
     invalid_type_error: "Please select a customer.",
@@ -14,11 +19,12 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
-const CreateInvoice = FormSchema.omit({ id: true, date: true });
+const CreateInvoiceFormSchema = CreateInvoiceSchema.omit({ id: true, date: true });
 
-export async function createAppointment(prevState, formData) {
+// Esto se pasa al action del formulario
+export async function createAppointment(prevState, formData: FormData) {
   //   const objectFormData = Object.fromEntries(formData.entries()) // En caso de que fuera un objeto muy grande
-  const validatedFields = CreateInvoice.safeParse({
+  const validatedFields = CreateInvoiceFormSchema.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
     status: formData.get("status"),
@@ -35,7 +41,7 @@ export async function createAppointment(prevState, formData) {
   // Prepare data for insertion into the database
   const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
-  const date = new Date().toISOString().split("T")[0];
+  const [date] = new Date().toISOString().split("T");
 
   try {
     await sql`
@@ -50,10 +56,10 @@ export async function createAppointment(prevState, formData) {
   redirect("/dashboard/invoices");
 }
 
-const updateInvoice = formschema.omit({ id: true, date: true });
+const updateInvoiceFormSchema = CreateInvoiceSchema.omit({ id: true, date: true });
 
 export async function updateinvoice(id, formdata) {
-  const { customerid, amount, status } = updateInvoice.parse({
+  const { customerid, amount, status } = updateInvoiceFormSchema.parse({
     customerid: formdata.get("customerid"),
     amount: formdata.get("amount"),
     status: formdata.get("status"),

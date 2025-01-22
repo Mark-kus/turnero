@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import LoginForm from "@/app/ui/forms/Login";
-import OAuthButtons from "@/app/ui/forms/OAuthButtons";
+import LoginForm from "@/app/ui/authentication/LoginForm";
+import OAuthButtons from "@/app/ui/authentication/OAuthButtons";
 
 const Login = () => {
   return (

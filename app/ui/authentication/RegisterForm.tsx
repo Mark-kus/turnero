@@ -62,7 +62,7 @@ const RegisterForm = () => {
           </button>
         </div>
       </label>
-      <button className="btn-round btn-h-10 btn btn-primary mb-10 mt-4 w-full">
+      <button className="btn btn-primary btn-h-10 btn-round mb-10 mt-4 w-full">
         Registrarme
       </button>
     </form>

@@ -10,7 +10,7 @@ const ForgotPasswordForm = () => {
           className="input-unbordered"
         />
       </label>
-      <button className="btn-h-10 btn-round btn btn-primary mt-4 w-full">
+      <button className="btn btn-primary btn-h-10 btn-round mt-4 w-full">
         Send Reset Link
       </button>
     </form>

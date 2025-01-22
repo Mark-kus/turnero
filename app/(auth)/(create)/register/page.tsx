@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import RegisterForm from "@/app/ui/forms/Register";
-import OAuthButtons from "@/app/ui/forms/OAuthButtons";
+import RegisterForm from "@/app/ui/authentication/RegisterForm";
+import OAuthButtons from "@/app/ui/authentication/OAuthButtons";
 
 const Register = () => {
   return (

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { authenticate } from "@/app/lib/actions/users";
+import { authenticate } from "@/app/lib/actions/accounts";
 
 import eyeClosed from "@public/eye/closed.svg";
 import eyeOpened from "@public/eye/opened.svg";

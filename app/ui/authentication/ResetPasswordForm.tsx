@@ -16,7 +16,7 @@ const ResetPasswordForm = () => {
         <span className="mb-1 text-left text-sm">Repetir nueva contraseña</span>
         <input className="input-unbordered" placeholder="Repetir contraseña" />
       </label>
-      <button className="btn-h-10 btn-round btn btn-primary mt-10 w-full">
+      <button className="btn btn-primary btn-h-10 btn-round mt-10 w-full">
         Confirmar cambio de contraseña
       </button>
     </form>
