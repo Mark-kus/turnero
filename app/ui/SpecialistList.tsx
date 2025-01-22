@@ -6,7 +6,11 @@ import SpecialistInformation from "./card/SpecialistInformation";
 import NoResults from "./NoResults";
 import { fetchProfessionals } from "../lib/data";
 
-const SpecialistList = async ({ specialty, name, insurance }) => {
+const SpecialistList = async ({ specialty, name, insurance }: {
+  specialty: string;
+  name: string;
+  insurance: string;
+}) => {
   const professionals = await fetchProfessionals(specialty, name, insurance);
 
   return (

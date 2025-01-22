@@ -6,7 +6,13 @@ import AppointmentsListSkeleton from "../ui/skeletons/SpecialistsListSkeleton";
 import Image from "next/image";
 import defaultImage from "@public/default/image.svg";
 
-const ProfessionalsSearch = async ({ searchParams }) => {
+const ProfessionalsSearch = async ({ searchParams }: {
+  searchParams: {
+    specialty: string;
+    name: string;
+    insurance: string;
+  }
+}) => {
   const specialty = searchParams?.specialty || "";
   const name = searchParams?.name || "";
   const insurance = searchParams?.insurance || "";

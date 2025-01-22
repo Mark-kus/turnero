@@ -2,7 +2,10 @@
 import React from "react";
 import Link from "next/link";
 
-const Modal = ({ open, onClose }) => {
+const Modal = ({ open, onClose }: {
+  open: boolean;
+  onClose: () => void;
+}) => {
   return (
     <>
       <dialog id="confirmed_modal" className="modal">

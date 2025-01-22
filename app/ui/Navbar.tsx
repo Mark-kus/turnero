@@ -4,7 +4,7 @@ import Image from "next/image";
 import { signOut } from "@/auth";
 
 import defaultProfile from "@/public/default/profile.svg";
-import NavLinks from "./NavLinks";
+import NavLinks from "@/app/ui/NavLinks";
 
 const Navbar = () => {
   return (
