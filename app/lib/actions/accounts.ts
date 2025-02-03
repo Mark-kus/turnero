@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 
 import {
+  ChangePasswordFormSchema,
   LoginFormSchema,
   ProfileFormSchema,
   SignupFormSchema,
@@ -11,8 +12,150 @@ import type { FormState } from "@/app/types";
 import { sql } from "@vercel/postgres";
 import bcrypt from "bcrypt";
 import { createSession, deleteSession, verifySession } from "@/app/lib/session";
-import { sendVerifyEmail } from "@/app/lib/email";
+import {
+  sendChangeEmail,
+  sendChangePassword,
+  sendVerifyEmail,
+} from "@/app/lib/email";
 import { redirect } from "next/navigation";
+
+export async function startPasswordChange(
+  state: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  let user = null;
+
+  // If user is not logged in, get user by email recieved in form
+  const email = formData.get("email");
+  if (email) {
+    const data = await sql`
+    SELECT * FROM accounts WHERE email = ${email as string}
+    `;
+    user = data.rows[0];
+
+    if (!user) {
+      return {
+        errors: {
+          email: ["Email not found."],
+        },
+      };
+    }
+
+    // If user is logged in, get user by session
+  } else {
+    const session = await verifySession();
+
+    const data = await sql`
+    SELECT * FROM accounts WHERE account_id = ${session.userId}
+    `;
+    user = data.rows[0];
+  }
+
+  // Check if there is already a expiry token for the user from the last 15 minutes
+  const tokenData = await sql`
+  SELECT * FROM accounts WHERE account_id = ${user.account_id} AND token_expiry > NOW() - INTERVAL '15 minutes'
+  `;
+  if (tokenData.rows.length > 0) {
+    return {
+      errors: {
+        submit: ["Please wait before requesting another password change."],
+      },
+    };
+  }
+
+  // Create token
+  const token = crypto.randomUUID();
+  const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
+  await sql`
+  UPDATE accounts
+  SET token = ${token}, token_expiry = ${token_expiry.toISOString()}
+  WHERE account_id = ${user.account_id}
+  `;
+
+  // Send email for confirmation
+  const verificationLink = `${process.env.PROJECT_URL}/password/change?token=${token}`;
+  const { error } = await sendChangePassword([user.email], {
+    first_name: user.first_name,
+    verificationLink,
+  });
+
+  if (error) {
+    return {
+      errors: {
+        submit: ["Failed to send email."],
+      },
+    };
+  }
+}
+
+export async function changePassword(
+  state: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const token = formData.get("token");
+  if (!token) {
+    return {
+      errors: {
+        submit: ["A token is required."],
+      },
+    };
+  }
+
+  const validationResult = ChangePasswordFormSchema.safeParse({
+    password: formData.get("password"),
+    password_confirmation: formData.get("password_confirmation"),
+  });
+
+  if (!validationResult.success) {
+    return {
+      errors: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
+  const { password, password_confirmation } = validationResult.data;
+
+  if (password !== password_confirmation) {
+    return {
+      errors: {
+        password_confirmation: ["Passwords do not match."],
+      },
+    };
+  }
+
+  const data = await sql`
+  SELECT * FROM accounts WHERE token = ${token as string}
+  `;
+  const user = data.rows[0];
+
+  if (!user) {
+    return {
+      errors: {
+        submit: ["Invalid token."],
+      },
+    };
+  }
+
+  if (user.token_expiry < new Date()) {
+    sql`
+    UPDATE accounts SET token = NULL, token_expiry = NULL WHERE account_id = ${user.account_id}
+    `;
+    return {
+      errors: {
+        submit: ["Token expired."],
+      },
+    };
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  sql`
+  UPDATE accounts
+  SET hashed_password = ${hashedPassword}, token = NULL, token_expiry = NULL
+  WHERE account_id = ${user.account_id}
+  `;
+
+  // Redirect to login
+  redirect("/login");
+}
 
 export async function updateProfile(
   state: FormState,
@@ -52,23 +195,54 @@ export async function updateProfile(
   const { first_name, last_name, email, birthdate, city, address, phone } =
     validationResult.data;
 
-  // Check if user email exists
-  const userExistsCount = await sql`
-  SELECT COUNT(*) FROM accounts WHERE email = ${email} AND account_id != ${session.userId}
+  const data = await sql`
+  SELECT * FROM accounts WHERE account_id = ${session.userId}
   `;
+  const user = data.rows[0];
 
-  if (userExistsCount.rows[0].count > 0) {
-    return {
-      errors: {
-        email: ["Email already exists."],
-      },
-    };
+  if (user.email !== email) {
+    // Check if user email exists
+    const userExistsCount = await sql`
+    SELECT COUNT(*) FROM accounts WHERE email = ${email} AND account_id != ${session.userId}
+    `;
+
+    if (userExistsCount.rows[0].count > 0) {
+      return {
+        errors: {
+          email: ["Email already exists."],
+        },
+      };
+    }
+
+    // Create token
+    const token = crypto.randomUUID();
+    const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
+    sql`
+    UPDATE accounts
+    SET token = ${token}, token_expiry = ${token_expiry.toISOString()}
+    WHERE account_id = ${session.userId}
+    `;
+
+    // Send email for confirmation
+    const verificationLink = `${process.env.PROJECT_URL}/change-email?token=${token}&email=${email}`;
+    const { error } = await sendChangeEmail([email], {
+      first_name,
+      verificationLink,
+    });
+
+    if (error) {
+      return {
+        errors: {
+          submit: ["Failed to send email."],
+        },
+      };
+    }
   }
 
   // Update user
   sql`
     UPDATE accounts
-    SET first_name = ${first_name}, last_name = ${last_name}, email = ${email}, birthdate = ${birthdate}, city = ${city}, address = ${address}, phone = ${phone}
+    SET first_name = ${first_name}, last_name = ${last_name}, birthdate = ${birthdate}, city = ${city}, address = ${address}, phone = ${phone}
     WHERE account_id = ${session.userId}
   `;
 }
@@ -106,9 +280,20 @@ export async function signup(
     };
   }
 
+  // Create user
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const token = crypto.randomUUID();
+  const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
+  sql`
+  INSERT INTO accounts (first_name, last_name, email, hashed_password, token, token_expiry)
+  VALUES (${first_name}, ${last_name}, ${email}, ${hashedPassword}, ${token}, ${token_expiry.toISOString()})
+  `;
+
   // Send email for confirmation
-  const { error } = await sendVerifyEmail([email], "verifyEmail", {
+  const verificationLink = `${process.env.PROJECT_URL}/verify?token=${token}`;
+  const { error } = await sendVerifyEmail([email], {
     first_name,
+    verificationLink,
   });
 
   if (error) {
@@ -119,17 +304,8 @@ export async function signup(
     };
   }
 
-  // Create user
-  const hashedPassword = await bcrypt.hash(password, 10);
-  sql`
-    INSERT INTO accounts (first_name, last_name, email, hashed_password)
-    VALUES (${first_name}, ${last_name}, ${email}, ${hashedPassword})
-  `;
-
   // Set userEmail cookie
   cookies().set("userEmail", email);
-
-  // Redirect to verify email page
   redirect("/verify");
 }
 

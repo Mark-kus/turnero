@@ -1,7 +1,7 @@
-import ResetPasswordForm from "@/app/ui/authentication/ResetPasswordForm";
+import ChangePasswordForm from "@/app/ui/authentication/ChangePasswordForm";
 import React from "react";
 
-const ResetPassword = () => {
+const ChangePassword = () => {
   return (
     <article>
       <h1 className="text-4xl font-bold">Cambiar contraseña</h1>
@@ -10,9 +10,9 @@ const ResetPassword = () => {
         Una vez que confirmado, podrás ingresar a la plataforma con la
         contraseña nueva.
       </p>
-      <ResetPasswordForm />
+      <ChangePasswordForm />
     </article>
   );
 };
 
-export default ResetPassword;
+export default ChangePassword;

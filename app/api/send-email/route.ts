@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import {
   VerifyEmailTemplate,
   ChangePasswordTemplate,
+  ChangeEmailTemplate,
 } from "@/app/ui/templates/verification";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -35,6 +36,9 @@ export async function POST(request: Request) {
         options.react = ChangePasswordTemplate(
           templateData,
         ) as React.ReactElement;
+        break;
+      case "changeEmail":
+        options.react = ChangeEmailTemplate(templateData) as React.ReactElement;
         break;
       default:
         return Response.json({ error: "Invalid template" }, { status: 400 });

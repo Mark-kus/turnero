@@ -6,7 +6,7 @@ import defaultProfile from "@/public/default/profile.svg";
 
 import { useFormState } from "react-dom";
 
-import { updateProfile } from "@/app/lib/actions/accounts";
+import { startPasswordChange, updateProfile } from "@/app/lib/actions/accounts";
 import { Account } from "@/app/types";
 
 interface FileChangeEvent extends React.ChangeEvent<HTMLInputElement> {
@@ -158,7 +158,13 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
           <span className="text-sm text-red-500">{state.errors.phone[0]}</span>
         )}
       </label>
-      <button className="btn btn-outline btn-primary btn-h-10 btn-round mt-4 w-full border-none bg-primary-content bg-opacity-40">
+      <button
+        onClick={() => {
+          const formData = new FormData();
+          startPasswordChange(undefined, formData);
+        }}
+        className="btn btn-outline btn-primary btn-h-10 btn-round mt-4 w-full border-none bg-primary-content bg-opacity-40"
+      >
         Cambiar contraseña
       </button>
       <button

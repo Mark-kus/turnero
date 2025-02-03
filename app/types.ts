@@ -27,6 +27,7 @@ export type FormState =
         last_name?: string[];
         email?: string[];
         password?: string[];
+        password_confirmation?: string[];
         submit?: string[];
         birthdate?: string[];
         avatarUrl?: string[];
