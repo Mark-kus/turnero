@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "../ui/Navbar";
+import Navbar from "@/app/ui/navigation/Navbar";
 
-const UserLayout = ({ children }) => {
+const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Navbar />

@@ -1,21 +1,24 @@
 import React, { Suspense } from "react";
-import AppointmentForm from "../ui/forms/Appointment";
-import SpecialistList from "../ui/SpecialistList";
-import Modal from "../ui/modals/Confirmed";
-import AppointmentsListSkeleton from "../ui/skeletons/SpecialistsListSkeleton";
+import AppointmentSearchForm from "@/app/ui/appointment/AppointmentSearchForm";
+import ProfessionalsList from "@/app/ui/appointment/ProfessionalsList";
+import ConfirmedModal from "@/app/ui/modals/ConfirmedModal";
+import AppointmentsListSkeleton from "@/app/ui/skeletons/ProfessionalsListSkeleton";
 import Image from "next/image";
 import defaultImage from "@public/default/image.svg";
 
-const ProfessionalsSearch = async ({ searchParams }: {
+const ProfessionalsSearch = async ({
+  searchParams,
+}: {
   searchParams: {
     specialty: string;
     name: string;
     insurance: string;
-  }
+  };
 }) => {
   const specialty = searchParams?.specialty || "";
   const name = searchParams?.name || "";
   const insurance = searchParams?.insurance || "";
+
   return (
     <main className="m-10 flex justify-between gap-10">
       <section className="hero max-w-xl bg-neutral">
@@ -28,7 +31,7 @@ const ProfessionalsSearch = async ({ searchParams }: {
               enim ad minim veniam, quis nostrud exercitation ullamco laboris
               nisi ut aliquip ex ea commodo.
             </p>
-            <div className="flex h-36 items-center justify-center rounded-lg border-2 border-base-300 bg-gray-200">
+            <div className="flex h-36 items-center justify-center rounded-lg border-2 border-base-300">
               <Image
                 src={defaultImage}
                 alt="Default image"
@@ -36,7 +39,7 @@ const ProfessionalsSearch = async ({ searchParams }: {
                 height={20}
               />
             </div>
-            <AppointmentForm />
+            <AppointmentSearchForm />
           </div>
         </div>
       </section>
@@ -44,13 +47,13 @@ const ProfessionalsSearch = async ({ searchParams }: {
         key={specialty + name + insurance}
         fallback={<AppointmentsListSkeleton />}
       >
-        <SpecialistList
+        <ProfessionalsList
           specialty={specialty}
           name={name}
           insurance={insurance}
         />
       </Suspense>
-      <Modal />
+      <ConfirmedModal />
     </main>
   );
 };

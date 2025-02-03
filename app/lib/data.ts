@@ -1,52 +1,144 @@
 import { sql } from "@vercel/postgres";
+import { cache } from "react";
 
-export async function fetchAccounts() {
+import { ListedProfessional, ProfessionalsFilters } from "@/app/types";
+
+import { verifySession } from "@/app/lib/session";
+import {
+  bookedAppointmentDTO,
+  listedProfessionalDTO,
+  accountDTO,
+} from "@/app/lib/dto";
+
+export const fetchAccount = async () => {
+  // Verify the session
+  const session = await verifySession();
+
   try {
+    // Fetch the account
     const data = await sql`
-      SELECT * FROM accounts
+      SELECT * FROM accounts WHERE accounts.account_id = ${session.userId}
     `;
-    return data.rows;
+    const filteredAccount = accountDTO(data.rows[0]);
+
+    // Filter user data
+    return filteredAccount;
   } catch (error) {
     console.error("Database Error: Failed to Fetch Accounts.", error);
     throw new Error("Database Error: Failed to Fetch Accounts.");
   }
-}
+};
 
-export async function fetchProfessionals() {
-  try {
-    return [];
-    const data = await sql`
-      SELECT * FROM professionals
-    `;
-    return data.rows;
-  } catch (error) {
-    console.error("Database Error: Failed to Fetch Professionals.", error);
-    throw new Error("Database Error: Failed to Fetch Professionals.");
-  }
-}
+export const fetchProfessionals = cache(
+  async (filters: ProfessionalsFilters): Promise<ListedProfessional[]> => {
+    // Verify the session
+    const session = await verifySession();
 
-export async function fetchInsurances() {
-  try {
-    return [];
-    const data = await sql`
-      SELECT * FROM insurances
-    `;
-    return data.rows;
-  } catch (error) {
-    console.error("Database Error: Failed to Fetch Insurances.", error);
-    throw new Error("Database Error: Failed to Fetch Insurances.");
-  }
-}
+    const { insurance, specialty, name } = filters;
 
-export async function fetchSpecialties() {
-  try {
-    return [];
-    const data = await sql`
-      SELECT * FROM specialties
+    try {
+      const data = await sql`
+      SELECT 
+      professionals.professional_id,
+      first_name,
+      last_name,
+      birthdate,
+      accounts.avatar_url,
+      establishments.street AS location,
+      STRING_AGG(DISTINCT CAST(availabilities.day_of_week AS VARCHAR), ', ') AS days_of_week,
+      STRING_AGG(DISTINCT health_insurances.name, ', ') AS insurances,
+      STRING_AGG(DISTINCT specialties.name, ', ') AS specialties
+      FROM professionals
+      JOIN accounts ON professionals.account_id = accounts.account_id
+      JOIN health_insurances_accounts ON accounts.account_id = health_insurances_accounts.account_id
+      JOIN health_insurances ON health_insurances_accounts.insurance_id = health_insurances.insurance_id
+      JOIN specialties_professionals ON professionals.professional_id = specialties_professionals.professional_id
+      JOIN specialties ON specialties_professionals.specialty_id = specialties.specialty_id
+      JOIN establishments ON professionals.establishment_id = establishments.establishment_id
+      JOIN availabilities ON professionals.professional_id = availabilities.professional_id
+      WHERE 
+      (health_insurances.name ILIKE ${"%" + insurance + "%"}) AND
+      (specialties.name ILIKE ${"%" + specialty + "%"}) AND
+      ((first_name || ' ' || last_name) ILIKE ${"%" + name + "%"})
+      GROUP BY professionals.professional_id, first_name, last_name, birthdate, establishments.street, accounts.avatar_url
     `;
-    return data.rows;
+      const professionals = data.rows.map(listedProfessionalDTO);
+      return professionals;
+    } catch (error) {
+      console.error("Database Error: Failed to Fetch Professionals.", error);
+      throw new Error("Database Error: Failed to Fetch Professionals.");
+    }
+  },
+);
+
+export async function fetchBookedAppointments() {
+  // Verify the session
+  const session = await verifySession();
+
+  try {
+    const comingAppointments = await sql`
+    SELECT 
+      appointments.appointment_id,
+      appointments.date,
+      appointments.time,
+      appointments.status,
+      professional_accounts.first_name AS professional_first_name,
+      professional_accounts.last_name AS professional_last_name,
+      patient_accounts.first_name AS patient_first_name,
+      patient_accounts.last_name AS patient_last_name,
+      patient_accounts.avatar_url AS patient_avatar_url,
+      additionals.first_name AS additional_first_name,
+      additionals.last_name AS additional_last_name,
+      establishments.street AS location
+    FROM appointments
+    JOIN accounts AS professional_accounts ON appointments.professional_id = professional_accounts.account_id
+    JOIN accounts AS patient_accounts ON appointments.account_id = patient_accounts.account_id
+    JOIN additionals ON appointments.additional_id = additionals.additional_id
+    JOIN professionals ON appointments.professional_id = professionals.professional_id
+    JOIN establishments ON professionals.establishment_id = establishments.establishment_id
+    WHERE appointments.account_id = ${session.userId}
+    AND appointments.date >= CURRENT_DATE
+    AND appointments.time >= CURRENT_TIME
+    ORDER BY appointments.date ASC, appointments.time ASC
+      `;
+    const comingAppointmentsDTO =
+      comingAppointments.rows.map(bookedAppointmentDTO);
+
+    const dueAppointments = await sql`
+    SELECT 
+      appointments.appointment_id,
+      appointments.date,
+      appointments.time,
+      appointments.status,
+      professional_accounts.first_name AS professional_first_name,
+      professional_accounts.last_name AS professional_last_name,
+      patient_accounts.first_name AS patient_first_name,
+      patient_accounts.last_name AS patient_last_name,
+      additionals.first_name AS additional_first_name,
+      additionals.last_name AS additional_last_name,
+      establishments.street AS location
+    FROM appointments
+    JOIN accounts AS professional_accounts ON appointments.professional_id = professional_accounts.account_id
+    JOIN accounts AS patient_accounts ON appointments.account_id = patient_accounts.account_id
+    JOIN additionals ON appointments.additional_id = additionals.additional_id
+    JOIN professionals ON appointments.professional_id = professionals.professional_id
+    JOIN establishments ON professionals.establishment_id = establishments.establishment_id
+    WHERE appointments.account_id = ${session.userId}
+    AND appointments.date <= CURRENT_DATE
+    AND appointments.time <= CURRENT_TIME
+    ORDER BY appointments.date ASC, appointments.time ASC
+      `;
+    const dueAppointmentsDTO = dueAppointments.rows.map(bookedAppointmentDTO);
+
+    return {
+      comingAppointments: comingAppointmentsDTO,
+      dueAppointments: dueAppointmentsDTO,
+    };
   } catch (error) {
-    console.error("Database Error: Failed to Fetch Specialties.", error);
-    throw new Error("Database Error: Failed to Fetch Specialties.");
+    console.error(
+      "Database Error: Failed to Fetch Booked Appointments.",
+      error,
+    );
+    throw new Error("Database Error: Failed to Fetch Booked Appointments.");
   }
 }

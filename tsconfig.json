@@ -2,13 +2,9 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"],
-      "@public/*": ["./public/*"],
+      "@public/*": ["./public/*"]
     },
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "target": "es5",
     "allowJs": true,
     "skipLibCheck": true,
@@ -28,12 +24,11 @@
     ]
   },
   "include": [
+    "types.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

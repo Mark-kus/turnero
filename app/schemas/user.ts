@@ -6,12 +6,12 @@ export const UserLogin = z
     password: z.string().min(6).max(100),
     rememberMe: z.string().optional(),
   })
-  .transform((data) => {
-    if (data.rememberMe === "yes") {
-      data.rememberMe = true;
-    }
-    return data;
-  });
+  // .transform((data) => {
+  //   if (data.rememberMe === "on") {
+  //     data.rememberMe = true;
+  //   }
+  //   return data;
+  // });
 
 export const UserCreate = z.object({
   email: z

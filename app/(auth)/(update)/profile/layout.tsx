@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 import defaultImage from "@public/default/image.svg";
-import Navbar from "@/app/ui/Navbar";
+import Navbar from "@/app/ui/navigation/Navbar";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   return (

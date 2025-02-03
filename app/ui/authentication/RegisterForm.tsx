@@ -1,38 +1,67 @@
 "use client";
+
 import React, { useState } from "react";
 import Image from "next/image";
 
 import eyeClosed from "@/public/eye/closed.svg";
 import eyeOpened from "@/public/eye/opened.svg";
+import { signup } from "@/app/lib/actions/accounts";
+import { useFormState, useFormStatus } from "react-dom";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [state, action] = useFormState(signup, undefined);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   return (
-    <form>
+    <form action={action}>
       <div className="flex gap-4">
         <label className="form-control w-full">
           <span className="mb-1 text-sm">First Name</span>
-          <input placeholder="Placeholder" className="input-unbordered" />
+          <input
+            name="first_name"
+            placeholder="Placeholder"
+            className="input-unbordered"
+          />
+          {state?.errors?.first_name && (
+            <span className="text-sm text-red-500">
+              {state.errors.first_name[0]}
+            </span>
+          )}
         </label>
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Last Name</span>
-          <input placeholder="Placeholder" className="input-unbordered" />
+          <input
+            name="last_name"
+            placeholder="Placeholder"
+            className="input-unbordered"
+          />
+          {state?.errors?.last_name && (
+            <span className="text-sm text-red-500">
+              {state.errors.last_name[0]}
+            </span>
+          )}
         </label>
       </div>
       <label className="form-control mt-4 w-full">
         <span className="mb-1 text-sm">Email</span>
-        <input placeholder="Placeholder" className="input-unbordered" />
+        <input
+          name="email"
+          placeholder="Placeholder"
+          className="input-unbordered"
+        />
+        {state?.errors?.email && (
+          <span className="text-sm text-red-500">{state.errors.email[0]}</span>
+        )}
       </label>
       <label className="form-control mt-4 w-full">
         <span className="mb-1 text-sm">Password</span>
-
         <div className="relative">
           <input
+            name="password"
             placeholder="Placeholder"
             className="input-unbordered"
             type={showPassword ? "text" : "password"}
@@ -61,12 +90,37 @@ const RegisterForm = () => {
             )}
           </button>
         </div>
+        {state?.errors?.password && (
+          <div className="text-sm text-red-500">
+            <p>Password must:</p>
+            <ul>
+              {state.errors.password.map((error) => (
+                <li key={error}>- {error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </label>
-      <button className="btn btn-primary btn-h-10 btn-round mb-10 mt-4 w-full">
-        Registrarme
-      </button>
+      <SignupButton />
+      {state?.errors?.submit && (
+        <span className="text-sm text-red-500">{state.errors.submit[0]}</span>
+      )}
     </form>
   );
 };
+
+function SignupButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      aria-disabled={pending}
+      type="submit"
+      className={`btn btn-primary btn-h-10 btn-round mb-10 mt-4 w-full ${pending ? "btn-disabled" : ""}`}
+    >
+      {pending ? "Submitting..." : "Sign up"}
+    </button>
+  );
+}
 
 export default RegisterForm;

@@ -1,4 +1,4 @@
-import AdittionalForm from "@/app/ui/forms/Adittional";
+import AdittionalForm from "@/app/ui/appointment/AdittionalForm";
 import React from "react";
 
 const Adittional = () => {

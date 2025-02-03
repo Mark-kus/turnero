@@ -1,20 +1,22 @@
-export const daysOfWeek = {
-  1: "Sunday",
-  2: "Monday",
-  3: "Tuesday",
-  4: "Wednesday",
-  5: "Thursday",
-  6: "Friday",
-  7: "Saturday",
-};
+import { AppointmentStatus, DayOfWeek } from "@/app/types";
 
-export const statusOfAppointment = {
-  1: "Pending",
-  2: "Approved",
-  3: "Denied",
-  4: "Completed",
-  5: "Cancelled",
-};
+export const WEEK_DAYS: DayOfWeek[] = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
-export const slotDurations = [15, 30, 60];
-export const recurrencePeriods = [1, 3, 6];
+export const APPOINTMENT_STATUS: AppointmentStatus[] = [
+  "Pending",
+  "Approved",
+  "Denied",
+  "Completed",
+  "Cancelled",
+];
+
+export const slotDurations = [15, 30, 60]; // In minutes
+export const recurrencePeriods = [1, 3, 6]; // In months
