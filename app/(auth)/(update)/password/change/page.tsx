@@ -1,5 +1,5 @@
 import ChangePasswordForm from "@/app/ui/authentication/ChangePasswordForm";
-import React from "react";
+import React, { Suspense } from "react";
 
 const ChangePassword = () => {
   return (
@@ -10,7 +10,9 @@ const ChangePassword = () => {
         Una vez que confirmado, podrás ingresar a la plataforma con la
         contraseña nueva.
       </p>
-      <ChangePasswordForm />
+      <Suspense fallback={<div>Cargando...</div>}>
+        <ChangePasswordForm />
+      </Suspense>
     </article>
   );
 };
