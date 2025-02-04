@@ -1,20 +1,13 @@
-import React, { Suspense } from "react";
+import React from "react";
 
 import { ProfileForm } from "@/app/ui/authentication/ProfileForm";
-import { ProfileFormSkeleton } from "@/app/ui/skeletons/ProfileFormSkeleton";
 import { fetchAccount } from "@/app/lib/data";
 
-const SuspendedProfile = async () => {
+const Profile = async () => {
   const account = await fetchAccount();
-  return <ProfileForm account={account} />;
-};
-
-const Profile = () => {
   return (
     <article className="m-auto">
-      <Suspense fallback={<ProfileFormSkeleton />}>
-        <SuspendedProfile />
-      </Suspense>
+      <ProfileForm account={account} />
     </article>
   );
 };

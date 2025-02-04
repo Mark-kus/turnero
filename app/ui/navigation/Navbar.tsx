@@ -8,10 +8,9 @@ import { verifySession } from "@/app/lib/session";
 import SignoutButton from "@/app/ui/navigation/SignoutButton";
 
 export default async function Navbar() {
-  const session = await verifySession();
-  const role = session.role;
+  const { role } = await verifySession();
 
-  if (role === "stablishment") {
+  if (role === "establishment") {
     return <StablishmentNavbar />;
   }
 

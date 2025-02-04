@@ -1,5 +1,7 @@
 import { AppointmentStatus, DayOfWeek } from "@/app/types";
 
+export const AVATARS_FOLDER = "avatars";
+
 export const WEEK_DAYS: DayOfWeek[] = [
   "Sunday",
   "Monday",

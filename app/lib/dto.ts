@@ -44,6 +44,7 @@ export function listedProfessionalDTO(professional: any): ListedProfessional {
 
 export function accountDTO(account: any): Account {
   return {
+    accountId: account.account_id,
     firstName: account.first_name,
     lastName: account.last_name,
     birthdate: account.birthdate,

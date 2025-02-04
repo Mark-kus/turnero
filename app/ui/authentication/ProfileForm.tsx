@@ -13,7 +13,7 @@ interface FileChangeEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & { files: FileList };
 }
 
-export const ProfileForm = async ({ account }: { account: Account }) => {
+export const ProfileForm = ({ account }: { account: Account }) => {
   const [state, action] = useFormState(updateProfile, undefined);
   const [selectedImage, setSelectedImage] = useState(
     account.avatarUrl ?? defaultProfile,
@@ -35,6 +35,8 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
     }
   };
 
+  const isDisabled = !account.accountId;
+
   return (
     <form action={action}>
       <div className="mb-10 flex items-center gap-4">
@@ -52,15 +54,18 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
             type="button"
             onClick={handleFileUpload}
             className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-white bg-opacity-70 text-sm font-medium text-black opacity-0 transition-opacity duration-300 hover:opacity-100"
+            disabled={isDisabled}
           >
             Editar
           </button>
           <input
+            name="avatar"
             type="file"
             accept="image/jpeg, image/png"
             ref={fileInputRef}
             onChange={handleFileChange}
             style={{ display: "none" }}
+            disabled={isDisabled}
           />
         </div>
         <h1 className="text-4xl font-bold">Perfil</h1>
@@ -69,9 +74,11 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">First Name</span>
           <input
+            name="first_name"
             className="input-unbordered"
             placeholder="First Name"
             defaultValue={account.firstName}
+            disabled={isDisabled}
           />
           {state?.errors?.first_name && (
             <span className="text-sm text-red-500">
@@ -82,9 +89,11 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Last Name</span>
           <input
+            name="last_name"
             className="input-unbordered"
             placeholder="Last Name"
             defaultValue={account.lastName}
+            disabled={isDisabled}
           />
           {state?.errors?.last_name && (
             <span className="text-sm text-red-500">
@@ -97,9 +106,15 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Fecha de Nacimiento</span>
           <input
+            name="birthdate"
             className="input-unbordered"
             placeholder="Fecha de Nacimiento"
-            defaultValue={account.birthdate.toISOString().split("T")[0]}
+            defaultValue={
+              account.birthdate
+                ? account.birthdate.toISOString().split("T")[0]
+                : ""
+            }
+            disabled={isDisabled}
           />
         </label>
         {state?.errors?.birthdate && (
@@ -110,9 +125,11 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Email</span>
           <input
+            name="email"
             className="input-unbordered"
             placeholder="Email"
             defaultValue={account.email}
+            disabled={isDisabled}
           />
           {state?.errors?.email && (
             <span className="text-sm text-red-500">
@@ -125,9 +142,11 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Localidad</span>
           <input
+            name="city"
             className="input-unbordered"
             placeholder="Localidad"
             defaultValue={account.city}
+            disabled={isDisabled}
           />
           {state?.errors?.city && (
             <span className="text-sm text-red-500">{state.errors.city[0]}</span>
@@ -136,9 +155,11 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Dirección</span>
           <input
+            name="address"
             className="input-unbordered"
             placeholder="Dirección"
             defaultValue={account.address}
+            disabled={isDisabled}
           />
           {state?.errors?.address && (
             <span className="text-sm text-red-500">
@@ -150,29 +171,37 @@ export const ProfileForm = async ({ account }: { account: Account }) => {
       <label className="form-control mb-4 w-full">
         <span className="mb-1 text-sm">Número de teléfono</span>
         <input
+          name="phone"
           className="input-unbordered"
           placeholder="Número de teléfono"
           defaultValue={account.phone}
+          disabled={isDisabled}
         />
         {state?.errors?.phone && (
           <span className="text-sm text-red-500">{state.errors.phone[0]}</span>
         )}
       </label>
       <button
-        onClick={() => {
+        onClick={async () => {
           const formData = new FormData();
-          startPasswordChange(undefined, formData);
+          await startPasswordChange(undefined, formData);
         }}
+        type="button"
         className="btn btn-outline btn-primary btn-h-10 btn-round mt-4 w-full border-none bg-primary-content bg-opacity-40"
+        disabled={isDisabled}
       >
         Cambiar contraseña
       </button>
       <button
         type="submit"
         className="btn btn-primary btn-h-10 btn-round mt-4 w-full"
+        disabled={isDisabled}
       >
         Editar datos
       </button>
+      {state?.errors?.submit && (
+        <span className="text-sm text-red-500">{state.errors.submit[0]}</span>
+      )}
     </form>
   );
 };

@@ -48,6 +48,7 @@ export const ProfileFormSchema = z.object({
     .string()
     .min(1, { message: "Please enter a valid phone number." })
     .trim(),
+  avatar: z.any(),
 });
 
 export const ChangePasswordFormSchema = z.object({

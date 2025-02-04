@@ -18,6 +18,7 @@ import {
   sendVerifyEmail,
 } from "@/app/lib/email";
 import { redirect } from "next/navigation";
+import { PutBlobResult } from "@vercel/blob";
 
 export async function startPasswordChange(
   state: FormState,
@@ -73,10 +74,10 @@ export async function startPasswordChange(
   `;
 
   // Send email for confirmation
-  const verificationLink = `${process.env.PROJECT_URL}/password/change?token=${token}`;
+  const tokenizedUrl = `${process.env.PROJECT_URL}/password/change?token=${token}`;
   const { error } = await sendChangePassword([user.email], {
-    first_name: user.first_name,
-    verificationLink,
+    firstName: user.first_name,
+    tokenizedUrl,
   });
 
   if (error) {
@@ -154,7 +155,7 @@ export async function changePassword(
   `;
 
   // Redirect to login
-  redirect("/login");
+  logout();
 }
 
 export async function updateProfile(
@@ -172,18 +173,7 @@ export async function updateProfile(
     city: formData.get("city"),
     address: formData.get("address"),
     phone: formData.get("phone"),
-  });
-
-  console.log({
-    formData: {
-      first_name: formData.get("first_name"),
-      last_name: formData.get("last_name"),
-      birthdate: formData.get("birthdate"),
-      email: formData.get("email"),
-      city: formData.get("city"),
-      address: formData.get("address"),
-      phone: formData.get("phone"),
-    },
+    avatar: formData.get("avatar"),
   });
 
   if (!validationResult.success) {
@@ -192,8 +182,16 @@ export async function updateProfile(
     };
   }
 
-  const { first_name, last_name, email, birthdate, city, address, phone } =
-    validationResult.data;
+  const {
+    first_name,
+    last_name,
+    email,
+    birthdate,
+    city,
+    address,
+    phone,
+    avatar,
+  } = validationResult.data;
 
   const data = await sql`
   SELECT * FROM accounts WHERE account_id = ${session.userId}
@@ -224,10 +222,10 @@ export async function updateProfile(
     `;
 
     // Send email for confirmation
-    const verificationLink = `${process.env.PROJECT_URL}/change-email?token=${token}&email=${email}`;
+    const tokenizedUrl = `${process.env.PROJECT_URL}/api/change-email?token=${token}&email=${email}`;
     const { error } = await sendChangeEmail([email], {
-      first_name,
-      verificationLink,
+      firstName: first_name,
+      tokenizedUrl,
     });
 
     if (error) {
@@ -236,6 +234,32 @@ export async function updateProfile(
           submit: ["Failed to send email."],
         },
       };
+    }
+  }
+
+  // Upload avatar
+  if (avatar?.size > 0) {
+    const filename = crypto.randomUUID();
+    const response = await fetch(
+      `${process.env.PROJECT_URL}/api/avatar/upload?filename=${filename}`,
+      {
+        method: "POST",
+        body: avatar,
+      },
+    );
+    const newBlob = (await response.json()) as PutBlobResult;
+    sql`
+    UPDATE accounts
+    SET avatar_url = ${newBlob.url}
+    WHERE account_id = ${session.userId}
+    `;
+
+    // Delete old avatar if exists (not awaiting)
+    if (user.avatar_url) {
+      fetch(
+        `${process.env.PROJECT_URL}/api/avatar/upload?filename=${user.avatar_url.split("/").pop()}`,
+        { method: "DELETE" },
+      );
     }
   }
 
@@ -290,10 +314,10 @@ export async function signup(
   `;
 
   // Send email for confirmation
-  const verificationLink = `${process.env.PROJECT_URL}/verify?token=${token}`;
+  const tokenizedUrl = `${process.env.PROJECT_URL}/api/verify?token=${token}`;
   const { error } = await sendVerifyEmail([email], {
-    first_name,
-    verificationLink,
+    firstName: first_name,
+    tokenizedUrl,
   });
 
   if (error) {

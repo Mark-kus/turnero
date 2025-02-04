@@ -87,6 +87,7 @@ export interface BookedAppointment {
 }
 
 export interface Account {
+  accountId: number;
   firstName: string;
   lastName: string;
   birthdate: Date;
@@ -98,3 +99,8 @@ export interface Account {
   session: SessionPayload;
   canEditStablishment: boolean;
 }
+
+export type EmailTemplateProps = {
+  firstName: string;
+  tokenizedUrl: string;
+};

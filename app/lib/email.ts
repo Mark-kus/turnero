@@ -1,6 +1,8 @@
+import { EmailTemplateProps } from "../types";
+
 export async function sendVerifyEmail(
   to: string[],
-  templateData: any,
+  templateData: EmailTemplateProps,
 ): Promise<any> {
   const response = await fetch(`${process.env.PROJECT_URL}/api/send-email`, {
     method: "POST",
@@ -15,7 +17,7 @@ export async function sendVerifyEmail(
 
 export async function sendChangeEmail(
   to: string[],
-  templateData: any,
+  templateData: EmailTemplateProps,
 ): Promise<any> {
   const response = await fetch(`${process.env.PROJECT_URL}/api/send-email`, {
     method: "POST",
@@ -30,7 +32,7 @@ export async function sendChangeEmail(
 
 export async function sendChangePassword(
   to: string[],
-  templateData: any,
+  templateData: EmailTemplateProps,
 ): Promise<any> {
   const response = await fetch(`${process.env.PROJECT_URL}/api/send-email`, {
     method: "POST",
