@@ -4,8 +4,12 @@ import NoResults from "@/app/ui/NoResults";
 import { fetchProfessionals } from "@/app/lib/data";
 import Image from "next/image";
 import defaultImage from "@public/default/image.svg";
-import { capitalizeAll, getDayName } from "@/app/lib/utils";
-import { NumberedDayOfWeek, ProfessionalsFilters } from "@/app/types";
+import {
+  capitalizeAll,
+  getAge,
+  getDaysOfWeek,
+} from "@/app/lib/utils";
+import { ProfessionalsFilters } from "@/app/types";
 
 const ProfessionalsList = async ({
   specialty,
@@ -18,21 +22,7 @@ const ProfessionalsList = async ({
     insurance,
   });
 
-  const getProfessionalAge = (birthdate: Date): string => {
-    return `${new Date().getFullYear() - new Date(birthdate).getFullYear()} años`;
-  };
-
-  const getDaysOfWeek = (daysOfWeek: string): string => {
-    return daysOfWeek
-      .split(", ")
-      .map((dayOfWeek) => {
-        const parsedDayOfWeek = parseInt(dayOfWeek) as NumberedDayOfWeek;
-        return getDayName(parsedDayOfWeek);
-      })
-      .join(", ");
-  };
-
-  if (!!professionals.length) {
+  if (!professionals.length) {
     return (
       <NoResults>
         <h3 className="my-4 text-lg">
@@ -49,7 +39,7 @@ const ProfessionalsList = async ({
   return (
     <section className="flex w-full flex-col gap-4 overflow-y-auto">
       {professionals.map((professional, index) => {
-        const professionalAge = getProfessionalAge(professional.birthdate);
+        const professionalAge = getAge(professional.birthdate);
         const daysOfWeek = getDaysOfWeek(professional.daysOfWeek);
 
         return (

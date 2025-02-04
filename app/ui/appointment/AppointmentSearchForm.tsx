@@ -1,17 +1,8 @@
 "use client";
 
+import { FormElement } from "@/app/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
-
-interface FormElements extends HTMLFormControlsCollection {
-  specialty: HTMLInputElement;
-  name: HTMLInputElement;
-  insurance: HTMLInputElement;
-}
-
-interface FormElement extends HTMLFormElement {
-  elements: FormElements;
-}
 
 const AppointmentSearchForm = () => {
   const searchParams = useSearchParams();

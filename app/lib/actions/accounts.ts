@@ -397,6 +397,7 @@ export async function login(
   const sessionData = {
     userId: user.account_id,
     role: user.role,
+    avatarUrl: user.avatar_url,
   };
   await createSession(sessionData);
 }

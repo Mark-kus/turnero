@@ -18,6 +18,7 @@ export type AppointmentStatus =
 
 export type NumberedRole = 0 | 1 | 2;
 export type Role = "patient" | "professional" | "establishment";
+export type Rating = 1 | 2 | 3 | 4 | 5;
 
 export type Time = `${number}${number}:${number}${number}:${number}${number}`; // TIME en formato HH:MM:SS
 export type FormState =
@@ -41,16 +42,40 @@ export type FormState =
 
 export type TemplateType = "verifyEmail" | "changePassword";
 
-export type SessionPayload = {
-  userId: string | number;
+export interface Review {
+  rating: Rating;
+  comment?: string;
+  appointment_id: number;
+}
+
+export interface AppointmentData {
+  date: Date;
+  time: string;
+  account_id: number;
+  professional_id: number;
+  adittional_id: number | null;
+}
+
+export interface CreatedSession {
+  userId: number;
+  avatarUrl?: string;
   role: Role;
+}
+
+export interface SessionPayload extends CreatedSession {
   expiresAt: Date;
-};
+}
 
 export interface ProfessionalsFilters {
   insurance: string;
   specialty: string;
   name: string;
+}
+
+export interface ProfessionalAvailability {
+  slotDuration: number;
+  startTime: Time;
+  endTime: Time;
 }
 
 export interface ListedProfessional {
@@ -63,6 +88,18 @@ export interface ListedProfessional {
   insurances: string;
   specialties: string;
   daysOfWeek: string;
+}
+
+export interface Patient {
+  patientId: number;
+  firstName: string;
+  lastName: string;
+  birthdate: Date;
+  identificationNumber: string;
+  email: string;
+  avatarUrl: string;
+  phone: string;
+  insurances: string;
 }
 
 export interface BookedAppointment {
@@ -84,6 +121,7 @@ export interface BookedAppointment {
     lastName: string;
   };
   location: string;
+  rating: Rating;
 }
 
 export interface Account {
@@ -104,3 +142,13 @@ export type EmailTemplateProps = {
   firstName: string;
   tokenizedUrl: string;
 };
+
+interface FormElements extends HTMLFormControlsCollection {
+  specialty: HTMLInputElement;
+  name: HTMLInputElement;
+  insurance: HTMLInputElement;
+}
+
+export interface FormElement extends HTMLFormElement {
+  elements: FormElements;
+}

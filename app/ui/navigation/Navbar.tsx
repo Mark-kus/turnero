@@ -8,28 +8,28 @@ import { verifySession } from "@/app/lib/session";
 import SignoutButton from "@/app/ui/navigation/SignoutButton";
 
 export default async function Navbar() {
-  const { role } = await verifySession();
+  const { role, avatarUrl } = await verifySession();
 
   if (role === "establishment") {
-    return <StablishmentNavbar />;
+    return <StablishmentNavbar avatarUrl={avatarUrl} />;
   }
 
   if (role === "professional") {
-    return <ProfessionalNavbar />;
+    return <ProfessionalNavbar avatarUrl={avatarUrl} />;
   }
 
-  return <UserNavbar />;
+  return <UserNavbar avatarUrl={avatarUrl} />;
 }
 
-function StablishmentNavbar() {
+function StablishmentNavbar({ avatarUrl }: { avatarUrl: string | undefined }) {
   return <div>You are admin</div>;
 }
 
-function ProfessionalNavbar() {
+function ProfessionalNavbar({ avatarUrl }: { avatarUrl: string | undefined }) {
   return <div>You are professional</div>;
 }
 
-function UserNavbar() {
+function UserNavbar({ avatarUrl }: { avatarUrl: string | undefined }) {
   return (
     <div className="navbar bg-base-300 px-8">
       <div className="flex-1">
@@ -48,7 +48,7 @@ function UserNavbar() {
             <div className="w-10 rounded-full">
               <Image
                 alt="Tailwind CSS Navbar component"
-                src={defaultProfile}
+                src={avatarUrl ?? defaultProfile}
                 width={40}
                 height={40}
               />

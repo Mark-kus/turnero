@@ -5,15 +5,12 @@ import ConfirmedModal from "@/app/ui/modals/ConfirmedModal";
 import AppointmentsListSkeleton from "@/app/ui/skeletons/ProfessionalsListSkeleton";
 import Image from "next/image";
 import defaultImage from "@public/default/image.svg";
+import { ProfessionalsFilters } from "../types";
 
 const ProfessionalsSearch = async ({
   searchParams,
 }: {
-  searchParams: {
-    specialty: string;
-    name: string;
-    insurance: string;
-  };
+  searchParams: ProfessionalsFilters;
 }) => {
   const specialty = searchParams?.specialty || "";
   const name = searchParams?.name || "";

@@ -1,6 +1,8 @@
 import { EmailTemplateProps } from "@/app/types";
 import React from "react";
 
+// https://react.email/docs/getting-started/automatic-setup
+
 export const VerifyEmailTemplate: React.FC<EmailTemplateProps> = ({
   firstName,
   tokenizedUrl,

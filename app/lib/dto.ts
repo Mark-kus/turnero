@@ -2,6 +2,8 @@ import type {
   Account,
   BookedAppointment,
   ListedProfessional,
+  Patient,
+  ProfessionalAvailability,
   Role,
 } from "@/app/types";
 
@@ -25,6 +27,7 @@ export function bookedAppointmentDTO(appointment: any): BookedAppointment {
       lastName: appointment.additional_last_name,
     },
     location: appointment.location,
+    rating: appointment.rating,
   };
 }
 
@@ -40,6 +43,10 @@ export function listedProfessionalDTO(professional: any): ListedProfessional {
     insurances: professional.insurances,
     specialties: professional.specialties,
   };
+}
+
+function canEditStablishment(role: Role) {
+  return role === "establishment";
 }
 
 export function accountDTO(account: any): Account {
@@ -58,6 +65,26 @@ export function accountDTO(account: any): Account {
   };
 }
 
-function canEditStablishment(role: Role) {
-  return role === "establishment";
+export function availabilitiesDTO(
+  availabilities: any,
+): ProfessionalAvailability {
+  return {
+    slotDuration: availabilities.slot_duration,
+    startTime: availabilities.start_time,
+    endTime: availabilities.end_time,
+  };
+}
+
+export function patientDTO(patient: any): Patient {
+  return {
+    patientId: patient.account_id,
+    firstName: patient.first_name,
+    lastName: patient.last_name,
+    birthdate: patient.birthdate,
+    identificationNumber: patient.identification_number,
+    email: patient.email,
+    avatarUrl: patient.avatar_url,
+    phone: patient.phone,
+    insurances: patient.insurances,
+  };
 }

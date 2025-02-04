@@ -94,7 +94,10 @@ const SuspensedBookedAppointments = async () => {
                     </figure>
                     <div className="m-2 w-full">
                       <AppointmentData appointment={appointment} />
-                      <DueOptionsButtons />
+                      <DueOptionsButtons
+                        disabled={Boolean(appointment.rating)}
+                        appointment_id={appointment.appointmentId}
+                      />
                     </div>
                   </div>
                 </li>

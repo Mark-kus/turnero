@@ -17,7 +17,7 @@ export const getDayName = (day: NumberedDayOfWeek): DayOfWeek => {
 export const getAppointmentStatus = (
   status: NumberedAppointmentStatus,
 ): AppointmentStatus => {
-  return APPOINTMENT_STATUS[status];
+  return APPOINTMENT_STATUS[status - 1];
 };
 
 export const capitalize = (str: string): string => {
@@ -26,4 +26,18 @@ export const capitalize = (str: string): string => {
 
 export const capitalizeAll = (str: string): string => {
   return str.split(" ").map(capitalize).join(" ");
+};
+
+export const getAge = (birthdate: Date): string => {
+  return `${new Date().getFullYear() - new Date(birthdate).getFullYear()} años`;
+};
+
+export const getDaysOfWeek = (daysOfWeek: string): string => {
+  return daysOfWeek
+    .split(", ")
+    .map((dayOfWeek) => {
+      const parsedDayOfWeek = parseInt(dayOfWeek) as NumberedDayOfWeek;
+      return getDayName(parsedDayOfWeek);
+    })
+    .join(", ");
 };

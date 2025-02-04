@@ -1,5 +1,5 @@
 import { APPOINTMENT_STATUS } from "@/app/constants";
-import { getAppointmentStatus } from "@/app/lib/utils";
+import { capitalize, getAppointmentStatus } from "@/app/lib/utils";
 import { BookedAppointment } from "@/app/types";
 
 const getFullName = (firstName: string, lastName: string): string => {
@@ -43,19 +43,21 @@ export default function AppointmentData({
       <ul className="text-sm">
         <li>
           Professional:{" "}
-          {getFullName(
-            appointment.professional.firstName,
-            appointment.professional.lastName,
+          {capitalize(
+            getFullName(
+              appointment.professional.firstName,
+              appointment.professional.lastName,
+            ),
           )}
         </li>
         <PatientInfo
           patient={appointment.patient}
           additional={appointment.additional}
         />
-        <li>Location: {appointment.location}</li>
+        <li>Location: {capitalize(appointment.location)}</li>
         <li>
           Professional confirmation:{" "}
-          <span className={statusClass[appointment.status]}>
+          <span className={statusClass[appointment.status - 1]}>
             {getAppointmentStatus(appointment.status)}
           </span>
         </li>
@@ -69,12 +71,12 @@ function PatientInfo({
   additional,
 }: {
   patient: { firstName: string; lastName: string };
-  additional?: { firstName: string; lastName: string };
+  additional: { firstName: string | null; lastName: string | null };
 }) {
   return (
     <li>
       Patient:{" "}
-      {additional ? (
+      {additional.firstName && additional.lastName ? (
         <>
           {getFullName(additional.firstName, additional.lastName)} -{" "}
           <span className="text-purple-600">Miembro familiar</span>
