@@ -5,15 +5,17 @@ import AppointmentConfirmationNavigation from "@/app/ui/appointment/AppointmentC
 import { fetchPremakeAppointment } from "@/app/lib/data";
 import { capitalizeAll, getAge, getDaysOfWeek } from "@/app/lib/utils";
 import DateTimePanel from "@/app/ui/appointment/DateTimePanel";
-import { AppointmentData } from "@/app/types";
+import { AppointmentData, ISODate } from "@/app/types";
 
 const ConfirmationPanel = async ({
   professional_id,
+  appointment_id,
   date,
   time,
 }: {
   professional_id: number;
-  date: Date;
+  appointment_id?: number;
+  date: ISODate;
   time: string;
 }) => {
   const { professional, patient } =
@@ -26,14 +28,14 @@ const ConfirmationPanel = async ({
     account_id: patient.patientId,
     adittional_id: null,
     professional_id,
-    date,
-    time,
+    appointment_id: appointment_id ?? null,
+    scheduled_time: new Date(`${date}T${time}`),
   };
 
   return (
     <>
       <div className="w-full">
-        <h2 className="mb-2 mt-4">Dentist</h2>
+        <h2 className="mb-2 mt-4">Professional</h2>
         <div className="card card-side rounded-none">
           <div className="bg-[#f7f7f7] p-4">
             <figure>
@@ -89,17 +91,24 @@ const ConfirmationPanel = async ({
           <div className="w-full bg-base-300 p-4">
             <div>
               <p className="font-medium">
-                {patientFullName}, {getAge(patient.birthdate)}
+                {patientFullName}
+                {patient.birthdate ? `, ${getAge(patient.birthdate)}` : ""}
               </p>
               <ul>
-                <li className="text-sm">ID: {patient.identificationNumber}</li>
+                {patient.identificationNumber && (
+                  <li className="text-sm">
+                    ID: {patient.identificationNumber}
+                  </li>
+                )}
                 <li className="text-sm">
                   Health insurance:{" "}
                   {patient.insurances
                     ? capitalizeAll(patient.insurances)
                     : "None"}
                 </li>
-                <li className="text-sm">Phone number: {patient.phone}</li>
+                {patient.phone && (
+                  <li className="text-sm">Phone number: {patient.phone}</li>
+                )}
                 <li className="text-sm">Contact email: {patient.email}</li>
               </ul>
             </div>

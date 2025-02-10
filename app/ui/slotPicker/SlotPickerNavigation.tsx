@@ -1,9 +1,10 @@
 "use client";
 
+import { ISODate } from "@/app/types";
 import Link from "next/link";
 import React from "react";
 
-const SlotPickerNavigation = ({ date, time }: { date: Date; time: string }) => {
+const SlotPickerNavigation = ({ date, time }: { date: ISODate; time: string }) => {
   const handleNext = () => {
     document.querySelector("#schedule-form")?.classList.add("hidden");
     document.querySelector("#confirmation-panel")?.classList.remove("hidden");

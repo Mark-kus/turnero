@@ -12,7 +12,7 @@ const DueOptionsButtons = ({
     const input = reviewModal.querySelector(
       "#appointment_id",
     ) as HTMLInputElement;
-
+    
     input.value = appointment_id.toString();
 
     reviewModal.showModal();

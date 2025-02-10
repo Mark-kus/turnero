@@ -2,39 +2,19 @@
 
 import React from "react";
 
-import { ProfessionalAvailability } from "@/app/types";
+import { AvailableSlot } from "@/app/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
-const calculateSlots = (availability: ProfessionalAvailability) => {
-  const slots = [];
-  const convertTimeToNumber = (time: string) => {
-    const [hours, minutes, seconds] = time.split(":").map(Number);
-    return hours * 3600 + minutes * 60 + seconds;
-  };
-
-  const startTime = convertTimeToNumber(availability.startTime);
-  const endTime = convertTimeToNumber(availability.endTime);
-  const slotCount = Math.floor(
-    (endTime - startTime) / (availability.slotDuration * 60),
-  );
-  for (let i = 0; i < slotCount; i++) {
-    const currentTime = startTime + i * (availability.slotDuration * 60);
-    const hours = Math.floor(currentTime / 3600);
-    const minutes = Math.floor((currentTime % 3600) / 60);
-    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-    slots.push(formattedTime);
-  }
-  return slots;
-};
-
 const HourOptions = ({
-  morningAvailabilities,
-  afternoonAvailabilities,
+  morningSlots,
+  afternoonSlots,
 }: {
-  morningAvailabilities: ProfessionalAvailability[];
-  afternoonAvailabilities: ProfessionalAvailability[];
+  morningSlots: AvailableSlot[];
+  afternoonSlots: AvailableSlot[];
 }) => {
   const searchParams = useSearchParams();
+  const selectedSlot = searchParams.get("time");
+
   const pathname = usePathname();
   const { replace } = useRouter();
 
@@ -47,48 +27,44 @@ const HourOptions = ({
 
   return (
     <>
-      {!!morningAvailabilities.length && (
+      {!!morningSlots.length && (
         <div className="w-full">
           <h4 className="mb-2 mt-2">Morning</h4>
           <ul className="columns-3 space-y-4">
-            {morningAvailabilities.map((availability) => {
-              const slots = calculateSlots(availability);
-              return slots.map((slot) => (
-                <li key={`${availability.startTime}-${slot}`}>
+            {morningSlots.map((slot) => {
+              return (
+                <li key={`${slot}`}>
                   <button
                     className={`btn btn-outline btn-primary btn-round h-20 w-full border-none font-medium ${
-                      searchParams.get("time") === slot &&
-                      "bg-primary !text-white"
+                      selectedSlot === slot && "bg-primary !text-white"
                     }`}
                     onClick={() => handleSlotClick(slot)}
                   >
                     {slot}
                   </button>
                 </li>
-              ));
+              );
             })}
           </ul>
         </div>
       )}
-      {!!afternoonAvailabilities.length && (
+      {!!afternoonSlots.length && (
         <div className="w-full">
           <h4 className="mb-2 mt-6">Afternoon</h4>
           <ul className="columns-3 space-y-4">
-            {afternoonAvailabilities.map((availability) => {
-              const slots = calculateSlots(availability);
-              return slots.map((slot) => (
-                <li key={`${availability.startTime}-${slot}`}>
+            {afternoonSlots.map((slot) => {
+              return (
+                <li key={`${slot}`}>
                   <button
                     className={`btn btn-outline btn-primary btn-round h-20 w-full border-none font-medium ${
-                      searchParams.get("time") === slot &&
-                      "bg-primary !text-white"
+                      selectedSlot === slot && "bg-primary !text-white"
                     }`}
                     onClick={() => handleSlotClick(slot)}
                   >
                     {slot}
                   </button>
                 </li>
-              ));
+              );
             })}
           </ul>
         </div>

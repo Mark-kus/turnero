@@ -13,15 +13,10 @@ import ComingOptionsButtons from "@/app/ui/booked/ComingOptionsButtons";
 import DueOptionsButtons from "@/app/ui/booked/DueOptionsButtons";
 import { fetchBookedAppointments } from "@/app/lib/data";
 import AppointmentData from "@/app/ui/appointment/AppointmentData";
-import { NumberedAppointmentStatus } from "@/app/types";
 
 const SuspensedBookedAppointments = async () => {
   const { dueAppointments, comingAppointments } =
     await fetchBookedAppointments();
-
-  const getDisabledDelete = (status: NumberedAppointmentStatus) => {
-    return status === 2;
-  };
 
   if (!comingAppointments.length && !dueAppointments.length) {
     return (
@@ -42,7 +37,7 @@ const SuspensedBookedAppointments = async () => {
       {!!comingAppointments.length && (
         <section>
           <h3 className="mb-4 font-semibold">Appointments coming soon</h3>
-          <ul className="grid grid-cols-3 space-x-4">
+          <ul className="grid grid-cols-3 gap-4">
             {comingAppointments.map((appointment, index) => {
               return (
                 <li key={index}>
@@ -62,7 +57,8 @@ const SuspensedBookedAppointments = async () => {
                     <div className="m-2 w-full">
                       <AppointmentData appointment={appointment} />
                       <ComingOptionsButtons
-                        disableDelete={getDisabledDelete(appointment.status)}
+                        disabled={appointment.status === 5}
+                        appointment={appointment}
                       />
                     </div>
                   </div>
@@ -75,7 +71,7 @@ const SuspensedBookedAppointments = async () => {
       {!!dueAppointments.length && (
         <section>
           <h3 className="mb-4 font-semibold">Due appointments</h3>
-          <ul className="grid grid-cols-3 space-x-4">
+            <ul className="grid grid-cols-3 gap-4">
             {dueAppointments.map((appointment, index) => {
               return (
                 <li key={index}>

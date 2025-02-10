@@ -1,11 +1,10 @@
 import React, { Suspense } from "react";
 import AppointmentSearchForm from "@/app/ui/appointment/AppointmentSearchForm";
 import ProfessionalsList from "@/app/ui/appointment/ProfessionalsList";
-import ConfirmedModal from "@/app/ui/modals/ConfirmedModal";
 import AppointmentsListSkeleton from "@/app/ui/skeletons/ProfessionalsListSkeleton";
 import Image from "next/image";
 import defaultImage from "@public/default/image.svg";
-import { ProfessionalsFilters } from "../types";
+import { ProfessionalsFilters } from "@/app/types";
 
 const ProfessionalsSearch = async ({
   searchParams,
@@ -50,7 +49,6 @@ const ProfessionalsSearch = async ({
           insurance={insurance}
         />
       </Suspense>
-      <ConfirmedModal />
     </main>
   );
 };

@@ -2,7 +2,9 @@ import { sql } from "@vercel/postgres";
 import { cache } from "react";
 
 import {
+  AvailableSlot,
   BookedAppointment,
+  ISODate,
   ListedProfessional,
   Patient,
   ProfessionalAvailability,
@@ -14,9 +16,9 @@ import {
   bookedAppointmentDTO,
   listedProfessionalDTO,
   accountDTO,
-  availabilitiesDTO,
   patientDTO,
 } from "@/app/lib/dto";
+import { getDateByISODate } from "./utils";
 
 export const fetchAccount = async () => {
   // Verify the session
@@ -25,7 +27,17 @@ export const fetchAccount = async () => {
   try {
     // Fetch the account
     const data = await sql`
-      SELECT * FROM accounts WHERE accounts.account_id = ${session.userId}
+      SELECT 
+          account_id,
+          first_name,
+          last_name,
+          TO_CHAR(birthdate, 'YYYY-MM-DD') as birthdate,
+          email,
+          avatar_url,
+          city,
+          address,
+          phone
+      FROM accounts WHERE accounts.account_id = ${session.userId}
     `;
     const filteredAccount = accountDTO(data.rows[0]);
 
@@ -50,7 +62,7 @@ export const fetchProfessionals = cache(
             professionals.professional_id,
             first_name,
             last_name,
-            birthdate,
+            TO_CHAR(birthdate, 'YYYY-MM-DD') AS birthdate,
             accounts.avatar_url,
             establishments.street AS location,
             STRING_AGG(DISTINCT CAST(availabilities.day_of_week AS VARCHAR), ', ') AS days_of_week,
@@ -93,12 +105,12 @@ export async function fetchBookedAppointments(): Promise<{
   const session = await verifySession();
 
   try {
-    const comingAppointments = await sql`
+    const appoinments = await sql`
     SELECT 
       appointments.appointment_id,
-      appointments.date,
-      appointments.time,
+      appointments.scheduled_time,
       appointments.status,
+      appointments.professional_id,
       professional_accounts.first_name AS professional_first_name,
       professional_accounts.last_name AS professional_last_name,
       patient_accounts.first_name AS patient_first_name,
@@ -116,44 +128,20 @@ export async function fetchBookedAppointments(): Promise<{
     JOIN professionals ON appointments.professional_id = professionals.professional_id
     JOIN establishments ON professionals.establishment_id = establishments.establishment_id
     WHERE appointments.account_id = ${session.userId}
-    AND appointments.date >= CURRENT_DATE
-    AND appointments.time >= CURRENT_TIME
-    ORDER BY appointments.date ASC, appointments.time ASC
+    ORDER BY appointments.scheduled_time ASC;
       `;
-    const comingAppointmentsDTO =
-      comingAppointments.rows.map(bookedAppointmentDTO);
+    const appoinmentsDTO = appoinments.rows.map(bookedAppointmentDTO);
 
-    const dueAppointments = await sql`
-    SELECT 
-      appointments.appointment_id,
-      appointments.date,
-      appointments.time,
-      appointments.status,
-      professional_accounts.first_name AS professional_first_name,
-      professional_accounts.last_name AS professional_last_name,
-      patient_accounts.first_name AS patient_first_name,
-      patient_accounts.last_name AS patient_last_name,
-      additionals.first_name AS additional_first_name,
-      additionals.last_name AS additional_last_name,
-      establishments.street AS location,
-      reviews.rating
-    FROM appointments
-    JOIN accounts AS professional_accounts ON appointments.professional_id = professional_accounts.account_id
-    JOIN accounts AS patient_accounts ON appointments.account_id = patient_accounts.account_id
-    LEFT JOIN additionals ON appointments.additional_id = additionals.additional_id
-    LEFT JOIN reviews ON appointments.appointment_id = reviews.appointment_id
-    JOIN professionals ON appointments.professional_id = professionals.professional_id
-    JOIN establishments ON professionals.establishment_id = establishments.establishment_id
-    WHERE appointments.account_id = ${session.userId}
-    AND appointments.date <= CURRENT_DATE
-    AND appointments.time <= CURRENT_TIME
-    ORDER BY appointments.date ASC, appointments.time ASC
-      `;
-    const dueAppointmentsDTO = dueAppointments.rows.map(bookedAppointmentDTO);
+    const indexOfDue = appoinmentsDTO.findIndex((appointment) => {
+      console.log(appointment.scheduledTime, new Date());
+      return appointment.scheduledTime > new Date();
+    });
 
     return {
-      comingAppointments: comingAppointmentsDTO,
-      dueAppointments: dueAppointmentsDTO,
+      dueAppointments:
+        indexOfDue > -1 ? appoinmentsDTO.slice(0, indexOfDue) : appoinmentsDTO,
+      comingAppointments:
+        indexOfDue > -1 ? appoinmentsDTO.slice(indexOfDue) : [],
     };
   } catch (error) {
     console.error(
@@ -163,45 +151,93 @@ export async function fetchBookedAppointments(): Promise<{
     throw new Error("Database Error: Failed to Fetch Booked Appointments.");
   }
 }
-export const fetchAvailabilities = async (
+
+const calculateSlots = (availability: ProfessionalAvailability) => {
+  const convertTimeToSeconds = (time: string) => {
+    const [hours, minutes, seconds] = time.split(":").map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  };
+  const giveFormat = (time: number) => time.toString().padStart(2, "0");
+
+  const slotDurationSeconds = availability.slot_duration * 60;
+  const startTime = convertTimeToSeconds(availability.start_time);
+  const endTime = convertTimeToSeconds(availability.end_time);
+
+  const slotCount = Math.floor((endTime - startTime) / slotDurationSeconds);
+
+  const slots = [];
+  for (let i = 0; i < slotCount; i++) {
+    const currentTime = startTime + i * slotDurationSeconds;
+
+    const hours = Math.floor(currentTime / 3600);
+    const minutes = Math.floor((currentTime % 3600) / 60);
+
+    const formattedTime = `${giveFormat(hours)}:${giveFormat(minutes)}`;
+    slots.push(formattedTime);
+  }
+  return slots as AvailableSlot[];
+};
+
+export const fetchAvailableSlots = async (
   professionalId: number,
-  date: Date,
+  date: ISODate,
 ): Promise<{
-  morningAvailabilities: ProfessionalAvailability[];
-  afternoonAvailabilities: ProfessionalAvailability[];
+  morningSlots: AvailableSlot[];
+  afternoonSlots: AvailableSlot[];
 }> => {
   // Verify the session
   const session = await verifySession();
+  const dateObj = getDateByISODate(date);
 
   try {
     const availabilities = await sql`
-    SELECT * FROM availabilities
-     JOIN time_slots ON availabilities.availability_id = time_slots.availability_id
+    SELECT 
+      availabilities.slot_duration,
+      time_slots.start_time,
+      time_slots.end_time
+    FROM availabilities
+    JOIN time_slots ON availabilities.availability_id = time_slots.availability_id
     WHERE professional_id = ${professionalId} 
-    AND availabilities.day_of_week = ${new Date(date).getDay()}
+    AND availabilities.day_of_week = ${dateObj.getDay()}
+    AND (
+      DATE(availabilities.updated_at) + INTERVAL '1 month' * availabilities.recurrence_period >= ${date}
+    )
+    `;
+
+    if (availabilities.rows.length === 0) {
+      return {
+        morningSlots: [],
+        afternoonSlots: [],
+      };
+    }
+
+    const appointments = await sql`
+    SELECT TO_CHAR(scheduled_time, 'HH24:MI') as scheduled_time
+    FROM appointments
+    WHERE professional_id = ${professionalId}
+    AND scheduled_time::date = ${date}
+    AND status IN (1, 2)
   `;
+    const bookedSlots = appointments.rows.map(
+      (appointment) => appointment.scheduled_time,
+    );
 
-    const morningAvailabilitiesDTO = availabilities.rows
-      .filter((availability) => {
-        const startTime = new Date(
-          `1970-01-01T${availability.start_time}Z`,
-        ).getUTCHours();
-        return startTime < 12;
-      })
-      .map(availabilitiesDTO);
+    const slots = availabilities.rows
+      .map((availabilities) =>
+        calculateSlots(availabilities as ProfessionalAvailability),
+      )
+      .flat()
+      .filter((slot) => !bookedSlots.includes(slot));
+    const afternoonIndex = slots.findIndex((slot) => slot >= "12:00");
 
-    const afternoonAvailabilitiesDTO = availabilities.rows
-      .filter((availability) => {
-        const startTime = new Date(
-          `1970-01-01T${availability.start_time}Z`,
-        ).getUTCHours();
-        return startTime >= 12;
-      })
-      .map(availabilitiesDTO);
+    const morningSlots =
+      afternoonIndex > -1 ? slots.slice(0, afternoonIndex) : slots;
+    const afternoonSlots =
+      afternoonIndex > -1 ? slots.slice(afternoonIndex) : [];
 
     return {
-      morningAvailabilities: morningAvailabilitiesDTO,
-      afternoonAvailabilities: afternoonAvailabilitiesDTO,
+      morningSlots,
+      afternoonSlots,
     };
   } catch (error) {
     console.error("Database Error: Failed to Fetch Availabilities.", error);
@@ -224,7 +260,7 @@ export const fetchPremakeAppointment = async (
             professionals.professional_id,
             first_name,
             last_name,
-            birthdate,
+            TO_CHAR(birthdate, 'YYYY-MM-DD') as birthdate,
             accounts.avatar_url,
             establishments.street AS location,
             STRING_AGG(DISTINCT CAST(availabilities.day_of_week AS VARCHAR), ', ') AS days_of_week,
@@ -249,7 +285,7 @@ export const fetchPremakeAppointment = async (
             first_name,
             last_name,
             email,
-            birthdate,
+            TO_CHAR(birthdate, 'YYYY-MM-DD') as birthdate,
             avatar_url,
             identification_number,
             phone,

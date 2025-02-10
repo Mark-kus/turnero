@@ -1,7 +1,8 @@
 import React from "react";
 import ScheduleForm from "@/app/ui/appointment/ScheduleForm";
 import ConfirmationPanel from "@/app/ui/appointment/ConfirmationPanel";
-import AdittionalForm from "@/app/ui/appointment/AdittionalForm";
+import { getISODate } from "@/app/lib/utils";
+import { ISODate } from "@/app/types";
 
 const AppointmentDatetime = ({
   params,
@@ -11,13 +12,15 @@ const AppointmentDatetime = ({
     professional_id: string;
   };
   searchParams: {
-    date: Date;
+    date: ISODate;
     time: string;
   };
 }) => {
-  const date = searchParams?.date || "";
+  // TODO: Prohibit past dates
+  const date = searchParams?.date || getISODate(new Date());
   const time = searchParams?.time || "";
   const professional_id = parseInt(params.professional_id);
+
   return (
     <main className="m-10 flex justify-center">
       <div id="schedule-form" className="w-full">

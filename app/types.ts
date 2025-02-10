@@ -8,7 +8,7 @@ export type DayOfWeek =
   | "Friday"
   | "Saturday";
 
-export type NumberedAppointmentStatus = 0 | 1 | 2 | 3 | 4;
+export type NumberedAppointmentStatus = 1 | 2 | 3 | 4 | 5;
 export type AppointmentStatus =
   | "Pending"
   | "Approved"
@@ -19,8 +19,9 @@ export type AppointmentStatus =
 export type NumberedRole = 0 | 1 | 2;
 export type Role = "patient" | "professional" | "establishment";
 export type Rating = 1 | 2 | 3 | 4 | 5;
+export type TimeSlot = `${number}${number}:${number}${number}:00`;
+export type ISODate = `${number}-${number}-${number}`;
 
-export type Time = `${number}${number}:${number}${number}:${number}${number}`; // TIME en formato HH:MM:SS
 export type FormState =
   | {
       errors?: {
@@ -49,10 +50,10 @@ export interface Review {
 }
 
 export interface AppointmentData {
-  date: Date;
-  time: string;
+  scheduled_time: Date;
   account_id: number;
   professional_id: number;
+  appointment_id: number | null;
   adittional_id: number | null;
 }
 
@@ -72,10 +73,11 @@ export interface ProfessionalsFilters {
   name: string;
 }
 
+export type AvailableSlot = `${number}${number}:${number}${number}`;
 export interface ProfessionalAvailability {
-  slotDuration: number;
-  startTime: Time;
-  endTime: Time;
+  slot_duration: number;
+  start_time: TimeSlot;
+  end_time: TimeSlot;
 }
 
 export interface ListedProfessional {
@@ -83,7 +85,7 @@ export interface ListedProfessional {
   avatarUrl: string;
   firstName: string;
   lastName: string;
-  birthdate: Date;
+  birthdate: ISODate;
   location: string;
   insurances: string;
   specialties: string;
@@ -94,46 +96,46 @@ export interface Patient {
   patientId: number;
   firstName: string;
   lastName: string;
-  birthdate: Date;
-  identificationNumber: string;
+  birthdate: ISODate | null;
+  identificationNumber: string | null;
   email: string;
-  avatarUrl: string;
-  phone: string;
-  insurances: string;
+  avatarUrl: string | null;
+  phone: string | null;
+  insurances: string | null;
 }
 
 export interface BookedAppointment {
   appointmentId: number;
-  date: Date;
-  time: Time;
+  scheduledTime: Date;
   status: NumberedAppointmentStatus;
   professional: {
+    professionalId: number;
     firstName: string;
     lastName: string;
   };
   patient: {
     firstName: string;
     lastName: string;
-    avatarUrl: string;
+    avatarUrl: string | null;
   };
   additional: {
     firstName: string;
     lastName: string;
   };
   location: string;
-  rating: Rating;
+  rating: Rating | null;
 }
 
 export interface Account {
   accountId: number;
   firstName: string;
   lastName: string;
-  birthdate: Date;
+  birthdate: ISODate | null;
   email: string;
-  avatarUrl: string;
-  city: string;
-  address: string;
-  phone: string;
+  avatarUrl: string | null;
+  city: string | null;
+  address: string | null;
+  phone: string | null;
   session: SessionPayload;
   canEditStablishment: boolean;
 }

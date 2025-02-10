@@ -8,6 +8,7 @@ import { useFormState } from "react-dom";
 
 import { startPasswordChange, updateProfile } from "@/app/lib/actions/accounts";
 import { Account } from "@/app/types";
+import { getDateByISODate } from "@/app/lib/utils";
 
 interface FileChangeEvent extends React.ChangeEvent<HTMLInputElement> {
   target: HTMLInputElement & { files: FileList };
@@ -111,7 +112,7 @@ export const ProfileForm = ({ account }: { account: Account }) => {
             placeholder="Fecha de Nacimiento"
             defaultValue={
               account.birthdate
-                ? account.birthdate.toISOString().split("T")[0]
+                ? getDateByISODate(account.birthdate).toISOString().split("T")[0]
                 : ""
             }
             disabled={isDisabled}
@@ -145,7 +146,7 @@ export const ProfileForm = ({ account }: { account: Account }) => {
             name="city"
             className="input-unbordered"
             placeholder="Localidad"
-            defaultValue={account.city}
+            defaultValue={account.city ?? ""}
             disabled={isDisabled}
           />
           {state?.errors?.city && (
@@ -158,7 +159,7 @@ export const ProfileForm = ({ account }: { account: Account }) => {
             name="address"
             className="input-unbordered"
             placeholder="Dirección"
-            defaultValue={account.address}
+            defaultValue={account.address ?? ""}
             disabled={isDisabled}
           />
           {state?.errors?.address && (
@@ -174,7 +175,7 @@ export const ProfileForm = ({ account }: { account: Account }) => {
           name="phone"
           className="input-unbordered"
           placeholder="Número de teléfono"
-          defaultValue={account.phone}
+          defaultValue={account.phone ?? ""}
           disabled={isDisabled}
         />
         {state?.errors?.phone && (

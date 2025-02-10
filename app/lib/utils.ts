@@ -1,6 +1,7 @@
 import type {
   AppointmentStatus,
   DayOfWeek,
+  ISODate,
   NumberedAppointmentStatus,
   NumberedDayOfWeek,
 } from "@/app/types";
@@ -28,9 +29,18 @@ export const capitalizeAll = (str: string): string => {
   return str.split(" ").map(capitalize).join(" ");
 };
 
-export const getAge = (birthdate: Date): string => {
-  return `${new Date().getFullYear() - new Date(birthdate).getFullYear()} años`;
+export const getAge = (birthdate: ISODate): string => {
+  return `${new Date().getUTCFullYear() - new Date(birthdate).getUTCFullYear()} años`;
 };
+
+export const getISODate = (date: Date): ISODate => {
+  return date.toISOString().split("T")[0] as ISODate;
+};
+
+export const getDateByISODate = (isoDate: ISODate): Date => {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
 
 export const getDaysOfWeek = (daysOfWeek: string): string => {
   return daysOfWeek

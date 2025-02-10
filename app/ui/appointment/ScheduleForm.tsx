@@ -2,6 +2,7 @@ import React from "react";
 import DatePicker from "@/app/ui/slotPicker/DatePicker";
 import HourPicker from "@/app/ui/slotPicker/HourPicker";
 import SlotPickerNavigation from "@/app/ui/slotPicker/SlotPickerNavigation";
+import { ISODate } from "@/app/types";
 
 const ScheduleForm = ({
   professional_id,
@@ -9,7 +10,7 @@ const ScheduleForm = ({
   time,
 }: {
   professional_id: number;
-  date: Date;
+  date: ISODate;
   time: string;
 }) => {
   return (

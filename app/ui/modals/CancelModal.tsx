@@ -1,16 +1,31 @@
 "use client";
-import React from "react";
+import { cancelAppointment } from "@/app/lib/actions/appointments";
+import React, { useRef } from "react";
 
 const CancelModal = () => {
+  const cancelModalRef = useRef<HTMLDialogElement>(null);
+  const appointmentIdRef = useRef<HTMLInputElement>(null);
+
   const closeModal = () => {
-    const cancelModal = document.getElementById(
-      "cancel_modal",
-    ) as HTMLDialogElement;
-    cancelModal.close();
+    if (cancelModalRef.current) {
+      cancelModalRef.current.close();
+    }
+  };
+
+  const handleCancel = () => {
+    if (appointmentIdRef.current) {
+      const appointment_id = appointmentIdRef.current.value;
+      if (appointment_id !== undefined) {
+        cancelAppointment(parseInt(appointment_id));
+        closeModal();
+      } else {
+        console.error("Appointment ID is not set");
+      }
+    }
   };
 
   return (
-    <dialog id="cancel_modal" className="modal">
+    <dialog id="cancel_modal" className="modal" ref={cancelModalRef}>
       <div className="modal-box rounded-none bg-neutral">
         <h3 className="text-2xl font-medium">
           Are you sure you want to cancel the appointment?
@@ -19,6 +34,7 @@ const CancelModal = () => {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
+        <input id="appointment_id" type="hidden" ref={appointmentIdRef} />
         <div className="flex gap-4 pt-6">
           <button
             onClick={closeModal}
@@ -27,7 +43,7 @@ const CancelModal = () => {
             Go back
           </button>
           <button
-            onClick={closeModal}
+            onClick={handleCancel}
             className={`btn btn-primary btn-h-10 btn-round w-full shrink font-medium`}
           >
             Cancel appointment

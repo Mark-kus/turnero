@@ -1,4 +1,4 @@
-import { EmailTemplateProps } from "../types";
+import { EmailTemplateProps } from "@/app/types";
 
 export async function sendVerifyEmail(
   to: string[],

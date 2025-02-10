@@ -1,28 +1,34 @@
 "use client";
 
-import React from "react";
+import { getDateByISODate } from "@/app/lib/utils";
+import { ISODate } from "@/app/types";
+import React, { useEffect } from "react";
 
-const DateTimePanel = ({ date, time }: { date: Date; time: string }) => {
-  if (!date || !time) {
-    // TODO: Check if its neccessary to handle this case
-    // document.querySelector("#schedule-form")?.classList.remove("hidden");
-    // document.querySelector("#confirmation-panel")?.classList.add("hidden");
-  }
+const DateTimePanel = ({ date, time }: { date: ISODate; time: string }) => {
+  useEffect(() => {
+    const isShowingPanel = document
+      .querySelector("#confirmation-panel")
+      ?.classList.contains("hidden");
 
-  const parsedDate = new Date(date);
+    if (isShowingPanel && !time && !date) {
+      document.querySelector("#schedule-form")?.classList.remove("hidden");
+      document.querySelector("#confirmation-panel")?.classList.add("hidden");
+    }
+  }, [date, time]);
+
+  const parsedDate = getDateByISODate(date);
+  const dateText = parsedDate.toLocaleDateString("en-US", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
 
   return (
     <div className="mt-4 flex w-full gap-4">
       <div className="w-full">
         <h2 className="mb-2">Date</h2>
         <div className="w-full bg-base-300 py-4 text-center text-sm">
-          {new Date(
-            parsedDate.getTime() + parsedDate.getTimezoneOffset() * 60000,
-          ).toLocaleDateString("en-US", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
+          {dateText}
         </div>
       </div>
       <div className="w-full">

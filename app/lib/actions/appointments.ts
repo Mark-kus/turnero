@@ -6,30 +6,53 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { AppointmentData, Review } from "@/app/types";
 
-export async function saveAppointment(appointmentData: AppointmentData) {
+export async function scheduleAppointment(appointmentData: AppointmentData) {
   const session = await verifySession();
 
-  const { date, time, account_id, adittional_id, professional_id } =
+  const { scheduled_time, account_id, adittional_id, professional_id } =
     appointmentData;
-
-  const parsedDate = new Date(date).toISOString();
-
-  console.log(date, time);
 
   if (adittional_id) {
     await sql`
-    INSERT INTO appointments (date, time, account_id, adittional_id, professional_id)
-    VALUES (${parsedDate}, ${time}, ${account_id}, ${adittional_id}, ${professional_id})
+    INSERT INTO appointments (scheduled_time, account_id, adittional_id, professional_id)
+    VALUES (${scheduled_time.toISOString()}, ${account_id}, ${adittional_id}, ${professional_id})
     `;
   } else {
     await sql`
-    INSERT INTO appointments (date, time, account_id, professional_id)
-    VALUES (${parsedDate}, ${time}, ${account_id}, ${professional_id})
+    INSERT INTO appointments (scheduled_time, account_id, professional_id)
+    VALUES (${scheduled_time.toISOString()}, ${account_id}, ${professional_id})
     `;
   }
 
   revalidatePath("/appointment");
   redirect("/appointment");
+}
+
+export async function rescheduleAppointment(appointmentData: AppointmentData) {
+  const session = await verifySession();
+
+  const { appointment_id, scheduled_time } = appointmentData;
+
+  await sql`
+    UPDATE appointments
+    SET scheduled_time = ${scheduled_time.toISOString()}
+    WHERE appointment_id = ${appointment_id}
+  `;
+
+  revalidatePath("/appointment/booked");
+  redirect("/appointment/booked");
+}
+
+export async function cancelAppointment(appointment_id: number) {
+  const session = await verifySession();
+
+  await sql`
+    UPDATE appointments
+    SET status = 5
+    WHERE appointment_id = ${appointment_id}
+  `;
+
+  revalidatePath("/appointment/booked");
 }
 
 export async function leaveReview(review: Review) {

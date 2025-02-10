@@ -4,12 +4,13 @@ import React, { useState } from "react";
 import leftThinArrow from "@public/arrow/thin/left.svg";
 import rightThinArrow from "@public/arrow/thin/right.svg";
 import { workSans } from "@/app/ui/fonts";
-import { capitalize } from "@/app/lib/utils";
+import { capitalize, getDateByISODate, getISODate } from "@/app/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+import { ISODate } from "@/app/types";
 
-const DatePicker = ({ date }: { date: Date }) => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date(date));
+const DatePicker = ({ date }: { date: ISODate }) => {
+  const [currentMonth, setCurrentMonth] = useState(getDateByISODate(date));
+  const [selectedDate, setSelectedDate] = useState(getDateByISODate(date));
   const { replace } = useRouter();
   const pathname = usePathname();
 
@@ -34,7 +35,7 @@ const DatePicker = ({ date }: { date: Date }) => {
 
   const onDateSelect = (date: Date) => {
     setSelectedDate(date);
-    const formattedDate = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+    const formattedDate = getISODate(date);
     replace(`${pathname}?date=${formattedDate}`, { scroll: false });
   };
 

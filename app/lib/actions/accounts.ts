@@ -64,7 +64,7 @@ export async function startPasswordChange(
     };
   }
 
-  // Create token
+  // Create token that expires in 24 hours
   const token = crypto.randomUUID();
   const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
   await sql`
@@ -212,7 +212,7 @@ export async function updateProfile(
       };
     }
 
-    // Create token
+    // Create token that expires in 24 hours
     const token = crypto.randomUUID();
     const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
     sql`
@@ -304,7 +304,7 @@ export async function signup(
     };
   }
 
-  // Create user
+  // Create user with token that expires in 24 hours
   const hashedPassword = await bcrypt.hash(password, 10);
   const token = crypto.randomUUID();
   const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);

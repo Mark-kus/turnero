@@ -24,21 +24,21 @@ export default function AppointmentData({
     return { hours, minutes };
   };
 
-  const getDateAndTime = (date: Date, time: string) => {
+  const getDateAndTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
       weekday: "long",
       day: "numeric",
       month: "long",
     };
     const formattedDate = date.toLocaleDateString("en-US", options);
-    const { hours, minutes } = getTime(time);
+    const { hours, minutes } = getTime(date.toLocaleTimeString());
     return `${formattedDate} - ${hours}:${minutes}hs`;
   };
 
   return (
     <div>
       <p className="mb-2 w-full font-medium leading-none">
-        {getDateAndTime(new Date(appointment.date), appointment.time)}
+        {getDateAndTime(new Date(appointment.scheduledTime))}
       </p>
       <ul className="text-sm">
         <li>

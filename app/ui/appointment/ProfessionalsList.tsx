@@ -8,6 +8,7 @@ import {
   capitalizeAll,
   getAge,
   getDaysOfWeek,
+  getISODate,
 } from "@/app/lib/utils";
 import { ProfessionalsFilters } from "@/app/types";
 
@@ -80,7 +81,7 @@ const ProfessionalsList = async ({
                 </ul>
               </div>
               <Link
-                href={`/appointment/${professional.professionalId}`}
+                href={`/appointment/${professional.professionalId}?date=${getISODate(new Date())}`}
                 className="btn btn-h-10 btn-round mt-2 w-full border-none bg-white bg-opacity-40 font-medium text-primary"
               >
                 Select

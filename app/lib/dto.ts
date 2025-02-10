@@ -3,17 +3,16 @@ import type {
   BookedAppointment,
   ListedProfessional,
   Patient,
-  ProfessionalAvailability,
   Role,
 } from "@/app/types";
 
 export function bookedAppointmentDTO(appointment: any): BookedAppointment {
   return {
     appointmentId: appointment.appointment_id,
-    date: appointment.date,
-    time: appointment.time,
+    scheduledTime: appointment.scheduled_time,
     status: appointment.status,
     professional: {
+      professionalId: appointment.professional_id,
       firstName: appointment.professional_first_name,
       lastName: appointment.professional_last_name,
     },
@@ -62,16 +61,6 @@ export function accountDTO(account: any): Account {
     phone: account.phone,
     session: account.session,
     canEditStablishment: canEditStablishment(account.role),
-  };
-}
-
-export function availabilitiesDTO(
-  availabilities: any,
-): ProfessionalAvailability {
-  return {
-    slotDuration: availabilities.slot_duration,
-    startTime: availabilities.start_time,
-    endTime: availabilities.end_time,
   };
 }
 

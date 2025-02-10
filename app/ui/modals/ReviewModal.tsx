@@ -1,37 +1,38 @@
 "use client";
 import { leaveReview } from "@/app/lib/actions/appointments";
 import { Rating } from "@/app/types";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
-const Review = () => {
+const ReviewModal = () => {
   const [rating, setRating] = useState<Rating>(5);
   const [comment, setComment] = useState<string | undefined>();
+  const modalRef = useRef<HTMLDialogElement>(null);
+  const appointmentIdRef = useRef<HTMLInputElement>(null);
 
   const closeModal = () => {
-    const cancelModal = document.getElementById(
-      "review_modal",
-    ) as HTMLDialogElement;
-    cancelModal.close();
+    if (modalRef.current) {
+      modalRef.current.close();
+    }
   };
 
   const handleSubmit = () => {
-    const appointment_id = (
-      document.getElementById("appointment_id") as HTMLInputElement
-    ).value;
-    if (appointment_id !== undefined) {
-      leaveReview({
-        rating,
-        comment,
-        appointment_id: parseInt(appointment_id),
-      });
-      closeModal();
-    } else {
-      console.error("Appointment ID is not set");
+    if (appointmentIdRef.current) {
+      const appointment_id = appointmentIdRef.current.value;
+      if (appointment_id !== undefined) {
+        leaveReview({
+          rating,
+          comment,
+          appointment_id: parseInt(appointment_id),
+        });
+        closeModal();
+      } else {
+        console.error("Appointment ID is not set");
+      }
     }
   };
 
   return (
-    <dialog id="review_modal" className="modal">
+    <dialog ref={modalRef} id="review_modal" className="modal">
       <div className="modal-box rounded-none bg-neutral">
         <h3 className="text-2xl font-medium">Leave your review</h3>
         <p className="py-2 text-sm">
@@ -56,7 +57,7 @@ const Review = () => {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         ></textarea>
-        <input id="appointment_id" type="hidden" />
+        <input ref={appointmentIdRef} id="appointment_id" type="hidden" />
         <div className="flex gap-4 pt-6">
           <button
             onClick={closeModal}
@@ -79,4 +80,4 @@ const Review = () => {
   );
 };
 
-export default Review;
+export default ReviewModal;
