@@ -71,14 +71,14 @@ function PatientInfo({
   additional,
 }: {
   patient: { firstName: string; lastName: string };
-  additional: { firstName: string | null; lastName: string | null };
+  additional: { name: string | null };
 }) {
   return (
     <li>
       Patient:{" "}
-      {additional.firstName && additional.lastName ? (
+      {additional.name ? (
         <>
-          {getFullName(additional.firstName, additional.lastName)} -{" "}
+          {additional.name} -{" "}
           <span className="text-purple-600">Miembro familiar</span>
         </>
       ) : (

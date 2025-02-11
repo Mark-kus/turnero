@@ -9,13 +9,13 @@ import { AppointmentData, Review } from "@/app/types";
 export async function scheduleAppointment(appointmentData: AppointmentData) {
   const session = await verifySession();
 
-  const { scheduled_time, account_id, adittional_id, professional_id } =
+  const { scheduled_time, account_id, additional_id, professional_id } =
     appointmentData;
 
-  if (adittional_id) {
+  if (additional_id) {
     await sql`
-    INSERT INTO appointments (scheduled_time, account_id, adittional_id, professional_id)
-    VALUES (${scheduled_time.toISOString()}, ${account_id}, ${adittional_id}, ${professional_id})
+    INSERT INTO appointments (scheduled_time, account_id, additional_id, professional_id)
+    VALUES (${scheduled_time.toISOString()}, ${account_id}, ${additional_id}, ${professional_id})
     `;
   } else {
     await sql`

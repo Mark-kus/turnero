@@ -6,34 +6,49 @@ import { fetchPremakeAppointment } from "@/app/lib/data";
 import { capitalizeAll, getAge, getDaysOfWeek } from "@/app/lib/utils";
 import DateTimePanel from "@/app/ui/appointment/DateTimePanel";
 import { AppointmentData, ISODate } from "@/app/types";
+import FamilyMemberButton from "@/app/ui/additional/FamilyMemberButton";
 
 const ConfirmationPanel = async ({
   professional_id,
   appointment_id,
+  additional_id,
   date,
   time,
 }: {
   professional_id: number;
   appointment_id?: number;
+  additional_id?: number;
   date: ISODate;
   time: string;
 }) => {
-  const { professional, patient } =
-    await fetchPremakeAppointment(professional_id);
+  const { professional, patient, additional } = await fetchPremakeAppointment(
+    professional_id,
+    additional_id,
+  );
 
   const professionalFullName = `${professional.firstName} ${professional.lastName}`;
-  const patientFullName = `${patient.firstName} ${patient.lastName}`;
+  const patientFullName = additional?.name
+    ? additional.name
+    : `${patient.firstName} ${patient.lastName}`;
+  const patientAge = additional?.age
+    ? additional.age
+    : patient.birthdate
+      ? getAge(patient.birthdate)
+      : "";
+  const patientIdentificationNumber = additional?.identificationNumber
+    ? additional.identificationNumber
+    : patient.identificationNumber;
 
   const appointmentData: AppointmentData = {
     account_id: patient.patientId,
-    adittional_id: null,
+    additional_id: additional_id ?? null,
     professional_id,
     appointment_id: appointment_id ?? null,
     scheduled_time: new Date(`${date}T${time}`),
   };
 
   return (
-    <>
+    <div className="relative">
       <div className="w-full">
         <h2 className="mb-2 mt-4">Professional</h2>
         <div className="card card-side rounded-none">
@@ -92,13 +107,11 @@ const ConfirmationPanel = async ({
             <div>
               <p className="font-medium">
                 {patientFullName}
-                {patient.birthdate ? `, ${getAge(patient.birthdate)}` : ""}
+                {patientAge ? `, ${patientAge}` : ""}
               </p>
               <ul>
-                {patient.identificationNumber && (
-                  <li className="text-sm">
-                    ID: {patient.identificationNumber}
-                  </li>
+                {patientIdentificationNumber && (
+                  <li className="text-sm">ID: {patientIdentificationNumber}</li>
                 )}
                 <li className="text-sm">
                   Health insurance:{" "}
@@ -112,14 +125,12 @@ const ConfirmationPanel = async ({
                 <li className="text-sm">Contact email: {patient.email}</li>
               </ul>
             </div>
-            <button className="btn-base-300 btn btn-round mt-2 h-8 min-h-8 border-2 border-base-300 text-opacity-60 hover:bg-base-300 hover:text-black">
-              The appointment is for a family member
-            </button>
+            <FamilyMemberButton disabled={Boolean(additional)} />
           </div>
         </div>
       </div>
       <AppointmentConfirmationNavigation appointmentData={appointmentData} />
-    </>
+    </div>
   );
 };
 

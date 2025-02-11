@@ -2,6 +2,7 @@ import { sql } from "@vercel/postgres";
 import { cache } from "react";
 
 import {
+  Additional,
   AvailableSlot,
   BookedAppointment,
   ISODate,
@@ -17,6 +18,7 @@ import {
   listedProfessionalDTO,
   accountDTO,
   patientDTO,
+  additionalDTO,
 } from "@/app/lib/dto";
 import { getDateByISODate } from "./utils";
 
@@ -116,8 +118,8 @@ export async function fetchBookedAppointments(): Promise<{
       patient_accounts.first_name AS patient_first_name,
       patient_accounts.last_name AS patient_last_name,
       patient_accounts.avatar_url AS patient_avatar_url,
-      additionals.first_name AS additional_first_name,
-      additionals.last_name AS additional_last_name,
+      additionals.name AS additional_name,
+      additionals.surname AS additional_surname,
       establishments.street AS location,
       reviews.rating
     FROM appointments
@@ -247,9 +249,11 @@ export const fetchAvailableSlots = async (
 
 export const fetchPremakeAppointment = async (
   professionalId: number,
+  additionalId?: number,
 ): Promise<{
   professional: ListedProfessional;
   patient: Patient;
+  additional: Additional | null;
 }> => {
   // Verify the session
   const session = await verifySession();
@@ -297,12 +301,30 @@ export const fetchPremakeAppointment = async (
         GROUP BY accounts.account_id;
   `;
 
+    let adittionalAccounts;
+    if (additionalId) {
+      adittionalAccounts = await sql`
+      SELECT 
+        additional_id,
+        name,
+        surname,
+        age,
+        identification_number
+      FROM additionals
+      WHERE additional_id = ${additionalId};
+    `;
+    }
+
     const professional = listedProfessionalDTO(professionalAccounts.rows[0]);
     const patient = patientDTO(patientAccounts.rows[0]);
+    const additional = adittionalAccounts
+      ? additionalDTO(adittionalAccounts.rows[0])
+      : null;
 
     return {
       professional,
       patient,
+      additional,
     };
   } catch (error) {
     console.error(

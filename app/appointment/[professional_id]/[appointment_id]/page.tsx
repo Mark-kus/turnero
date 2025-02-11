@@ -1,5 +1,6 @@
 import { getISODate } from "@/app/lib/utils";
 import { ISODate } from "@/app/types";
+import AdditionalForm from "@/app/ui/additional/AdditionalForm";
 import ConfirmationPanel from "@/app/ui/appointment/ConfirmationPanel";
 import ScheduleForm from "@/app/ui/appointment/ScheduleForm";
 import React from "react";
@@ -15,10 +16,12 @@ const Reschedule = ({
   searchParams: {
     date: ISODate;
     time: string;
+    additional_id: string;
   };
 }) => {
   const date = searchParams?.date || getISODate(new Date());
   const time = searchParams?.time || "";
+  const additional_id = searchParams?.additional_id ? parseInt(searchParams?.additional_id) : undefined;
   const professional_id = parseInt(params.professional_id);
   const appointment_id = parseInt(params.appointment_id);
 
@@ -42,9 +45,13 @@ const Reschedule = ({
         <ConfirmationPanel
           professional_id={professional_id}
           appointment_id={appointment_id}
+          additional_id={additional_id}
           date={date}
           time={time}
         />
+      </div>
+      <div id="additional-form" className="hidden">
+        <AdditionalForm />
       </div>
     </main>
   );

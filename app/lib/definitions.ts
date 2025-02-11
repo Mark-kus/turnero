@@ -55,3 +55,15 @@ export const ChangePasswordFormSchema = z.object({
   password: passwordSchema,
   password_confirmation: z.string(),
 });
+
+export const FamilyMemberSchema = z.object({
+  name: nameSchema,
+  surname: nameSchema,
+  identification_number: z
+    .string()
+    .min(1, { message: "Please enter a valid ID." }),
+  age: z.preprocess(
+    (val) => parseInt(z.string().parse(val), 10),
+    z.number().int().min(1, { message: "Please enter a valid age." }),
+  ),
+});

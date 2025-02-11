@@ -27,6 +27,8 @@ export type FormState =
       errors?: {
         first_name?: string[];
         last_name?: string[];
+        surname?: string[];
+        name?: string[];
         email?: string[];
         password?: string[];
         password_confirmation?: string[];
@@ -36,8 +38,13 @@ export type FormState =
         city?: string[];
         address?: string[];
         phone?: string[];
+        identification_number?: string[];
+        age?: string[];
       };
       message?: string;
+      success?: {
+        data?: any;
+      };
     }
   | undefined;
 
@@ -54,7 +61,7 @@ export interface AppointmentData {
   account_id: number;
   professional_id: number;
   appointment_id: number | null;
-  adittional_id: number | null;
+  additional_id: number | null;
 }
 
 export interface CreatedSession {
@@ -119,8 +126,8 @@ export interface BookedAppointment {
     avatarUrl: string | null;
   };
   additional: {
-    firstName: string;
-    lastName: string;
+    name: string;
+    surname: string;
   };
   location: string;
   rating: Rating | null;
@@ -138,6 +145,14 @@ export interface Account {
   phone: string | null;
   session: SessionPayload;
   canEditStablishment: boolean;
+}
+
+export interface Additional {
+  additionalId: number;
+  name: string;
+  surname: string;
+  age: number;
+  identificationNumber: string;
 }
 
 export type EmailTemplateProps = {

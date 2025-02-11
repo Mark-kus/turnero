@@ -156,6 +156,7 @@ export async function changePassword(
 
   // Redirect to login
   logout();
+  redirect("/login");
 }
 
 export async function updateProfile(

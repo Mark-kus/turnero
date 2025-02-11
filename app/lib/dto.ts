@@ -1,5 +1,6 @@
 import type {
   Account,
+  Additional,
   BookedAppointment,
   ListedProfessional,
   Patient,
@@ -22,8 +23,8 @@ export function bookedAppointmentDTO(appointment: any): BookedAppointment {
       avatarUrl: appointment.patient_avatar_url,
     },
     additional: {
-      firstName: appointment.additional_first_name,
-      lastName: appointment.additional_last_name,
+      name: appointment.additional_name,
+      surname: appointment.additional_surname,
     },
     location: appointment.location,
     rating: appointment.rating,
@@ -75,5 +76,15 @@ export function patientDTO(patient: any): Patient {
     avatarUrl: patient.avatar_url,
     phone: patient.phone,
     insurances: patient.insurances,
+  };
+}
+
+export function additionalDTO(additional: any): Additional {
+  return {
+    additionalId: additional.additional_id,
+    name: additional.name,
+    surname: additional.surname,
+    age: parseInt(additional.age),
+    identificationNumber: additional.identification_number,
   };
 }
