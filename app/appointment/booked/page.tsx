@@ -31,7 +31,7 @@ const SuspensedBookedAppointments = async () => {
       </NoResults>
     );
   }
-
+  
   return (
     <>
       {!!comingAppointments.length && (

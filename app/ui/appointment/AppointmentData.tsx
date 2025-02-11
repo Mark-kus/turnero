@@ -1,4 +1,3 @@
-import { APPOINTMENT_STATUS } from "@/app/constants";
 import { capitalize, getAppointmentStatus } from "@/app/lib/utils";
 import { BookedAppointment } from "@/app/types";
 

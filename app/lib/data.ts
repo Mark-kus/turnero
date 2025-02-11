@@ -135,7 +135,6 @@ export async function fetchBookedAppointments(): Promise<{
     const appoinmentsDTO = appoinments.rows.map(bookedAppointmentDTO);
 
     const indexOfDue = appoinmentsDTO.findIndex((appointment) => {
-      console.log(appointment.scheduledTime, new Date());
       return appointment.scheduledTime > new Date();
     });
 
