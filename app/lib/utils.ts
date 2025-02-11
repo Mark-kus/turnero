@@ -40,7 +40,13 @@ export const getISODate = (date: Date): ISODate => {
 export const getDateByISODate = (isoDate: ISODate): Date => {
   const [year, month, day] = isoDate.split("-").map(Number);
   return new Date(year, month - 1, day);
-}
+};
+
+export const getLocalTimeByUTCTime = (utcTime: string): string => {
+  return new Date(`${new Date().toISOString().split("T")[0]}T${utcTime}Z`)
+    .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    .slice(0, 5);
+};
 
 export const getDaysOfWeek = (daysOfWeek: string): string => {
   return daysOfWeek

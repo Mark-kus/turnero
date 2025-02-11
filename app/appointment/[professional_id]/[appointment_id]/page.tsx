@@ -31,6 +31,7 @@ const Reschedule = ({
         <h1 className="mb-8 text-3xl">Reschedule your appointment</h1>
         <ScheduleForm
           professional_id={professional_id}
+          appointment_id={appointment_id}
           date={date}
           time={time}
         />

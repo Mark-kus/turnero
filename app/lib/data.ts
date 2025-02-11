@@ -182,6 +182,7 @@ const calculateSlots = (availability: ProfessionalAvailability) => {
 export const fetchAvailableSlots = async (
   professionalId: number,
   date: ISODate,
+  appointment_id?: number,
 ): Promise<{
   morningSlots: AvailableSlot[];
   afternoonSlots: AvailableSlot[];
@@ -194,8 +195,8 @@ export const fetchAvailableSlots = async (
     const availabilities = await sql`
     SELECT 
       availabilities.slot_duration,
-      time_slots.start_time,
-      time_slots.end_time
+      TO_CHAR(start_time, 'HH24:MI:SS') as start_time,
+      TO_CHAR(end_time, 'HH24:MI:SS') as end_time
     FROM availabilities
     JOIN time_slots ON availabilities.availability_id = time_slots.availability_id
     WHERE professional_id = ${professionalId} 
@@ -212,13 +213,25 @@ export const fetchAvailableSlots = async (
       };
     }
 
-    const appointments = await sql`
-    SELECT TO_CHAR(scheduled_time, 'HH24:MI') as scheduled_time
-    FROM appointments
-    WHERE professional_id = ${professionalId}
-    AND scheduled_time::date = ${date}
-    AND status IN (1, 2)
+    let appointments;
+    if (!appointment_id) {
+      appointments = await sql`
+        SELECT TO_CHAR(scheduled_time, 'HH24:MI') as scheduled_time
+          FROM appointments
+        WHERE professional_id = ${professionalId}
+        AND scheduled_time::date = ${date}
+        AND status IN (1, 2)
   `;
+    } else {
+      appointments = await sql`
+        SELECT TO_CHAR(scheduled_time, 'HH24:MI') as scheduled_time
+          FROM appointments
+        WHERE professional_id = ${professionalId}
+        AND scheduled_time::date = ${date}
+        AND status IN (1, 2)
+        AND appointment_id != ${appointment_id}
+      `;
+    }
     const bookedSlots = appointments.rows.map(
       (appointment) => appointment.scheduled_time,
     );

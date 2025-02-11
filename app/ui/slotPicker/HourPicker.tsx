@@ -7,12 +7,14 @@ import { ISODate } from "@/app/types";
 const HourPicker = async ({
   professional_id,
   date,
+  appointment_id,
 }: {
   professional_id: number;
   date: ISODate;
+  appointment_id?: number;
 }) => {
   const { morningSlots, afternoonSlots } =
-    await fetchAvailableSlots(professional_id, date);
+    await fetchAvailableSlots(professional_id, date, appointment_id);
 
   if (!morningSlots.length && !afternoonSlots.length) {
     return (

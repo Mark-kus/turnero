@@ -4,6 +4,7 @@ import React from "react";
 
 import { AvailableSlot } from "@/app/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { getLocalTimeByUTCTime } from "@/app/lib/utils";
 
 const HourOptions = ({
   morningSlots,
@@ -32,15 +33,16 @@ const HourOptions = ({
           <h4 className="mb-2 mt-2">Morning</h4>
           <ul className="columns-3 space-y-4">
             {morningSlots.map((slot) => {
+              const localSlot = getLocalTimeByUTCTime(slot);
               return (
-                <li key={`${slot}`}>
+                <li key={`${localSlot}`}>
                   <button
                     className={`btn btn-outline btn-primary btn-round h-20 w-full border-none font-medium ${
-                      selectedSlot === slot && "bg-primary !text-white"
+                      selectedSlot === localSlot && "bg-primary !text-white"
                     }`}
-                    onClick={() => handleSlotClick(slot)}
+                    onClick={() => handleSlotClick(localSlot)}
                   >
-                    {slot}
+                    {localSlot}
                   </button>
                 </li>
               );
@@ -53,15 +55,16 @@ const HourOptions = ({
           <h4 className="mb-2 mt-6">Afternoon</h4>
           <ul className="columns-3 space-y-4">
             {afternoonSlots.map((slot) => {
+              const localSlot = getLocalTimeByUTCTime(slot);
               return (
-                <li key={`${slot}`}>
+                <li key={`${localSlot}`}>
                   <button
                     className={`btn btn-outline btn-primary btn-round h-20 w-full border-none font-medium ${
-                      selectedSlot === slot && "bg-primary !text-white"
+                      selectedSlot === localSlot && "bg-primary !text-white"
                     }`}
-                    onClick={() => handleSlotClick(slot)}
+                    onClick={() => handleSlotClick(localSlot)}
                   >
-                    {slot}
+                    {localSlot}
                   </button>
                 </li>
               );

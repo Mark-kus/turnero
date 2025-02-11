@@ -1,5 +1,6 @@
 "use client";
 
+import { getLocalTimeByUTCTime } from "@/app/lib/utils";
 import { BookedAppointment } from "@/app/types";
 import Link from "next/link";
 
@@ -24,7 +25,7 @@ const ComingOptionsButtons = ({
   const [date, fullTime] = appointment.scheduledTime.toISOString().split("T");
   const searchParams = new URLSearchParams();
   searchParams.set("date", date);
-  searchParams.set("time", fullTime.slice(0, 5));
+  searchParams.set("time", getLocalTimeByUTCTime(fullTime.slice(0, 5)));
   const href = `/appointment/${appointment.professional.professionalId}/${appointment.appointmentId}?${searchParams.toString()}`;
 
   return (
