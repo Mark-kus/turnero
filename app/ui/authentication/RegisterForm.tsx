@@ -22,12 +22,19 @@ const RegisterForm = () => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">First Name</span>
           <input
+            type="input"
+            className="input-unbordered validator"
+            required
+            placeholder="First Name"
+            pattern="[A-Za-z][A-Za-z0-9\-]*"
+            minLength={3}
+            maxLength={30}
+            title="Only letters"
             name="first_name"
-            placeholder="Placeholder"
-            className="input-unbordered"
           />
+          <p className="validator-hint">Must be 3 to 30 characters long</p>
           {state?.errors?.first_name && (
-            <span className="text-sm text-red-500">
+            <span className="text-sm text-error-content">
               {state.errors.first_name[0]}
             </span>
           )}
@@ -35,12 +42,19 @@ const RegisterForm = () => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Last Name</span>
           <input
+            type="input"
+            className="input-unbordered validator"
+            required
+            placeholder="Last Name"
+            pattern="[A-Za-z][A-Za-z0-9\-]*"
+            minLength={3}
+            maxLength={30}
+            title="Only letters"
             name="last_name"
-            placeholder="Placeholder"
-            className="input-unbordered"
           />
+          <p className="validator-hint">Must be 3 to 30 characters long</p>
           {state?.errors?.last_name && (
-            <span className="text-sm text-red-500">
+            <span className="text-sm text-error-content">
               {state.errors.last_name[0]}
             </span>
           )}
@@ -49,22 +63,29 @@ const RegisterForm = () => {
       <label className="form-control mt-4 w-full">
         <span className="mb-1 text-sm">Email</span>
         <input
+          className="input-unbordered validator"
+          type="email"
+          required
+          placeholder="mail@site.com"
           name="email"
-          placeholder="Placeholder"
-          className="input-unbordered"
+          pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
         />
+        <div className="validator-hint">Enter valid email address</div>
         {state?.errors?.email && (
-          <span className="text-sm text-red-500">{state.errors.email[0]}</span>
+          <span className="fieldset-label text-error-content">{state.errors.email[0]}</span>
         )}
       </label>
       <label className="form-control mt-4 w-full">
         <span className="mb-1 text-sm">Password</span>
         <div className="relative">
           <input
-            name="password"
-            placeholder="Placeholder"
-            className="input-unbordered"
             type={showPassword ? "text" : "password"}
+            className="input-unbordered validator"
+            required
+            placeholder="Password"
+            minLength={7}
+            title="Must be more than 7 characters, including numbers, letters and symbols"
+            name="password"
           />
           <button
             type="button"
@@ -90,8 +111,8 @@ const RegisterForm = () => {
             )}
           </button>
         </div>
-        {state?.errors?.password && (
-          <div className="text-sm text-red-500">
+        {state?.errors?.password ? (
+          <div className="text-sm text-error-content">
             <p>Password must:</p>
             <ul>
               {state.errors.password.map((error) => (
@@ -99,11 +120,21 @@ const RegisterForm = () => {
               ))}
             </ul>
           </div>
+        ) : (
+          <p className="validator-hint">
+            Must be more than 7 characters, including
+            <br />
+            At least one number
+            <br />
+            At least one letter
+            <br />
+            At least one symbol
+          </p>
         )}
       </label>
       <SignupButton />
       {state?.errors?.submit && (
-        <span className="text-sm text-red-500">{state.errors.submit[0]}</span>
+        <span className="text-sm text-error-content">{state.errors.submit[0]}</span>
       )}
     </form>
   );
@@ -116,7 +147,7 @@ function SignupButton() {
     <button
       aria-disabled={pending}
       type="submit"
-      className={`btn btn-primary btn-h-10 btn-round mb-10 mt-4 w-full ${pending ? "btn-disabled" : ""}`}
+      className={`btn btn-primary btn-h-10 btn-round mt-4 mb-10 w-full ${pending ? "btn-disabled" : ""}`}
     >
       {pending ? "Submitting..." : "Sign up"}
     </button>

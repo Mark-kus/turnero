@@ -37,7 +37,7 @@ function UserNavbar({ avatarUrl }: { avatarUrl: string | undefined }) {
           Turnero
         </Link>
       </div>
-      <div className="flex-none gap-6">
+      <div className="flex items-center gap-6">
         <NavLinks />
         <div className="dropdown dropdown-end">
           <div
@@ -56,7 +56,7 @@ function UserNavbar({ avatarUrl }: { avatarUrl: string | undefined }) {
           </div>
           <ul
             tabIndex={0}
-            className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
+            className="menu dropdown-content rounded-box bg-base-100 z-1 mt-3 w-52 p-2 shadow-sm"
           >
             <li>
               <Link href={"/profile"}>Profile</Link>

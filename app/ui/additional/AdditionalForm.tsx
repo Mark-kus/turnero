@@ -84,7 +84,7 @@ const AdditionalForm = () => {
                   onChange={handleChange}
                 />
                 {errors?.name && (
-                  <span className="text-sm text-red-500">{errors.name[0]}</span>
+                  <span className="text-sm text-error-content">{errors.name[0]}</span>
                 )}
               </label>
               <label className="form-control mt-4 w-full">
@@ -97,7 +97,7 @@ const AdditionalForm = () => {
                   onChange={handleChange}
                 />
                 {errors?.surname && (
-                  <span className="text-sm text-red-500">
+                  <span className="text-sm text-error-content">
                     {errors.surname[0]}
                   </span>
                 )}
@@ -112,7 +112,7 @@ const AdditionalForm = () => {
                   onChange={handleChange}
                 />
                 {errors?.identification_number && (
-                  <span className="text-sm text-red-500">
+                  <span className="text-sm text-error-content">
                     {errors.identification_number[0]}
                   </span>
                 )}
@@ -127,7 +127,7 @@ const AdditionalForm = () => {
                   onChange={handleChange}
                 />
                 {errors?.age && (
-                  <span className="text-sm text-red-500">{errors.age[0]}</span>
+                  <span className="text-sm text-error-content">{errors.age[0]}</span>
                 )}
               </label>
               <div className="mt-20 flex gap-4">

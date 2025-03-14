@@ -16,16 +16,20 @@ const ChangePasswordForm = () => {
       <input type="hidden" name="token" value={token} />
 
       <label className="form-control">
-        <span className="mb-1 text-left text-sm">
+        <span className="mb-1 block text-left text-sm">
           Ingresar nueva contraseña
         </span>
         <input
+          type="password"
+          className="input-unbordered validator"
+          required
+          placeholder="Password"
+          minLength={7}
+          title="Must be more than 7 characters, including numbers, letters and symbols"
           name="password"
-          className="input-unbordered mb-4"
-          placeholder="Ingresar contraseña"
         />
-        {state?.errors?.password && (
-          <div className="text-sm text-red-500">
+        {state?.errors?.password ? (
+          <div className="text-error-content text-sm">
             <p>Password must:</p>
             <ul>
               {state.errors.password.map((error) => (
@@ -33,24 +37,42 @@ const ChangePasswordForm = () => {
               ))}
             </ul>
           </div>
+        ) : (
+          <p className="fieldset-label my-2 text-left">
+            Must be more than 7 characters, including
+            <br />
+            At least one number
+            <br />
+            At least one letter
+            <br />
+            At least one symbol
+          </p>
         )}
       </label>
       <label className="form-control">
-        <span className="mb-1 text-left text-sm">Repetir nueva contraseña</span>
+        <span className="mb-1 block text-left text-sm">
+          Repetir nueva contraseña
+        </span>
         <input
+          type="password"
+          className="input-unbordered validator"
+          required
+          placeholder="Confirm Password"
+          minLength={7}
+          title="Must be more than 7 characters, including numbers, letters and symbols"
           name="password_confirmation"
-          className="input-unbordered"
-          placeholder="Repetir contraseña"
         />
         {state?.errors?.password_confirmation && (
-          <span className="text-sm text-red-500">
+          <span className="text-error-content text-sm">
             {state.errors.password_confirmation[0]}
           </span>
         )}
       </label>
       <LoginButton />
       {state?.errors?.submit && (
-        <span className="text-sm text-red-500">{state.errors.submit[0]}</span>
+        <span className="text-error-content text-sm">
+          {state.errors.submit[0]}
+        </span>
       )}
     </form>
   );

@@ -102,7 +102,7 @@ const DatePicker = ({ date }: { date: ISODate }) => {
               <li key={day} className="my-4">
                 <button
                   className={`btn btn-outline btn-primary btn-round w-full border-none font-medium ${
-                    isSelected && "bg-primary !text-white"
+                    isSelected && "bg-primary text-white!"
                   }`}
                   onClick={() => onDateSelect(date)}
                 >

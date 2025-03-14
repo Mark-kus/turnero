@@ -6,29 +6,56 @@ import { startPasswordChange } from "@/app/lib/actions/accounts";
 
 const ForgotPasswordForm = () => {
   const [state, action] = useFormState(startPasswordChange, undefined);
-  const [email, setEmail] = useState("");
+  const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
     const cookieMatch = document.cookie.match(/userEmail=([^;]+)/);
-    const email = cookieMatch ? cookieMatch[1].replace(/%40/g, "@") : "";
-    setEmail(email);
+    const userEmail = cookieMatch ? cookieMatch[1].replace(/%40/g, "@") : "";
+    setUserEmail(userEmail);
   }, []);
 
   return (
     <form action={action}>
-      <label className="form-control">
-        <span className="mb-1 text-left">Email Address</span>
+      <label className="form-control w-full">
+        <span className="mb-1 block text-left">Email Address</span>
         <input
+          className="input-unbordered validator"
+          type="email"
+          required
+          placeholder="mail@site.com"
+          defaultValue={userEmail}
           name="email"
-          placeholder="Enter personal or work email address"
-          className="input-unbordered"
-          defaultValue={email}
+          pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
         />
+        <div className="validator-hint">Enter valid email address</div>
         {state?.errors?.email && (
-          <span className="text-sm text-red-500">{state.errors.email[0]}</span>
+          <span className="alert-error">{state.errors.email[0]}</span>
         )}
       </label>
       <LoginButton />
+      {state?.errors?.submit && (
+        <div
+          className="alert alert-error mb-10 flex h-10"
+          aria-live="polite"
+          aria-atomic="true"
+          role="alert"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <p className="text-sm">{state.errors.submit[0]}</p>
+        </div>
+      )}
     </form>
   );
 };

@@ -23,30 +23,36 @@ const LoginForm = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
+  console.log(state);
   return (
-    <form action={action}>
+    <form action={action} className="min-w-sm">
       <label className="form-control w-full">
         <span className="mb-1 text-sm">Email</span>
         <input
-          name="email"
-          className="input-unbordered"
-          placeholder="Placeholder"
+          className="input-unbordered validator"
+          type="email"
+          required
+          placeholder="mail@site.com"
           defaultValue={userEmail}
+          name="email"
+          pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
         />
+        <div className="validator-hint">Enter valid email address</div>
         {state?.errors?.email && (
-          <span className="text-sm text-red-500">{state.errors.email[0]}</span>
+          <div className="validator-error">{state.errors.email[0]}</div>
         )}
       </label>
       <label className="form-control mt-4 w-full">
         <span className="mb-1 text-sm">Password</span>
         <div className="relative">
           <input
-            name="password"
-            className="input-unbordered"
-            placeholder="Placeholder"
-            autoComplete="off"
             type={showPassword ? "text" : "password"}
+            className="input-unbordered validator"
+            required
+            placeholder="Password"
+            minLength={7}
+            title="Must be more than 7 characters, including numbers, letters and symbols"
+            name="password"
           />
           <button
             type="button"
@@ -72,18 +78,15 @@ const LoginForm = () => {
             )}
           </button>
         </div>
-        {state?.errors?.password ? (
-          <span className="text-sm text-red-500">
-            {state.errors.password[0]}
-          </span>
-        ) : (
-          <div className="label">
-            <span className="label-text-alt opacity-80">
-              It must be a combination of minimum 8 letters, number, and
-              symbols.
-            </span>
-          </div>
-        )}
+        <p className="validator-hint">
+          Must be more than 7 characters, including
+          <br />
+          At least one number
+          <br />
+          At least one letter
+          <br />
+          At least one symbol
+        </p>
       </label>
       <div className="my-2 flex justify-between">
         <label className="label cursor-pointer flex-row-reverse justify-end p-0">
@@ -92,7 +95,7 @@ const LoginForm = () => {
             name="remember_me"
             type="checkbox"
             defaultChecked
-            className="checkbox checkbox-xs rounded-sm border-2"
+            className="checkbox checkbox-xs rounded-xs border-2"
           />
         </label>
         <Link href={"/password/forgot"} className="link-hover link text-xs">
@@ -102,7 +105,7 @@ const LoginForm = () => {
       <LoginButton />
       {state?.errors?.submit && (
         <div
-          className="alert alert-error mb-10 flex h-8"
+          className="alert alert-error mb-10 flex h-10"
           aria-live="polite"
           aria-atomic="true"
           role="alert"
@@ -133,7 +136,7 @@ function LoginButton() {
     <button
       type="submit"
       aria-disabled={pending}
-      className={`btn btn-primary btn-h-10 btn-round mb-10 mt-2 w-full ${pending ? "btn-disabled" : ""}`}
+      className={`btn btn-primary btn-h-10 btn-round mt-2 mb-10 w-full ${pending ? "btn-disabled" : ""}`}
     >
       Log In
     </button>

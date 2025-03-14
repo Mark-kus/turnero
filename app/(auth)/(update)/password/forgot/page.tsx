@@ -5,7 +5,7 @@ const ForgotPassword = () => {
   return (
     <article>
       <h1 className="text-4xl font-bold">Forgotten your password?</h1>
-      <p className="mb-8 mt-2">
+      <p className="mt-2 mb-8">
         There is nothing to worry about, we&apos;ll send you a message to help
         you reset your password.
       </p>

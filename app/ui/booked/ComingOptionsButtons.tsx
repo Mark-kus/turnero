@@ -1,14 +1,15 @@
 "use client";
 
-import { getLocalTimeByUTCTime } from "@/app/lib/utils";
 import { BookedAppointment } from "@/app/types";
 import Link from "next/link";
 
 const ComingOptionsButtons = ({
   appointment,
+  serverAppointmentTime,
   disabled = false,
 }: {
   appointment: BookedAppointment;
+  serverAppointmentTime: string;
   disabled: boolean;
 }) => {
   const openModal = (id: string) => {
@@ -22,10 +23,10 @@ const ComingOptionsButtons = ({
     cancelModal.showModal();
   };
 
-  const [date, fullTime] = appointment.scheduledTime.toISOString().split("T");
+  const [date] = appointment.scheduledTime.toISOString().split("T");
   const searchParams = new URLSearchParams();
   searchParams.set("date", date);
-  searchParams.set("time", getLocalTimeByUTCTime(fullTime.slice(0, 5)));
+  searchParams.set("time", serverAppointmentTime);
   const href = `/appointment/${appointment.professional.professionalId}/${appointment.appointmentId}?${searchParams.toString()}`;
 
   return (

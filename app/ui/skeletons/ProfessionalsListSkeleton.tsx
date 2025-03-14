@@ -25,15 +25,15 @@ const ProfessionalsListSkeleton = () => {
           </div>
           <div className="m-4 flex w-full flex-col">
             <div>
-              <p className="h-6 w-2/4 rounded bg-gray-300"></p>
+              <p className="h-6 w-2/4 rounded-sm bg-gray-300"></p>
               <ul>
-                <li className="mt-2 h-4 w-1/4 rounded bg-gray-300"></li>
-                <li className="mt-2 h-4 w-1/3 rounded bg-gray-300"></li>
-                <li className="mt-2 h-4 w-1/4 rounded bg-gray-300"></li>
-                <li className="mt-2 h-4 w-1/5 rounded bg-gray-300"></li>
+                <li className="mt-2 h-4 w-1/4 rounded-sm bg-gray-300"></li>
+                <li className="mt-2 h-4 w-1/3 rounded-sm bg-gray-300"></li>
+                <li className="mt-2 h-4 w-1/4 rounded-sm bg-gray-300"></li>
+                <li className="mt-2 h-4 w-1/5 rounded-sm bg-gray-300"></li>
               </ul>
             </div>
-            <div className="mt-2 h-10 w-full rounded border-none bg-white bg-opacity-40 font-medium text-primary"></div>
+            <div className="mt-2 h-10 w-full rounded-sm border-none bg-white bg-opacity-40 font-medium text-primary"></div>
           </div>
         </div>
       ))}

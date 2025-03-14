@@ -7,8 +7,10 @@ const getFullName = (firstName: string, lastName: string): string => {
 
 export default function AppointmentData({
   appointment,
+  serverAppointmentTime,
 }: {
   appointment: BookedAppointment;
+  serverAppointmentTime: string;
 }) {
   const statusClass = [
     "text-yellow-600",
@@ -18,11 +20,6 @@ export default function AppointmentData({
     "text-red-600",
   ];
 
-  const getTime = (time: string) => {
-    const [hours, minutes] = time.split(":");
-    return { hours, minutes };
-  };
-
   const getDateAndTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
       weekday: "long",
@@ -30,13 +27,12 @@ export default function AppointmentData({
       month: "long",
     };
     const formattedDate = date.toLocaleDateString("en-US", options);
-    const { hours, minutes } = getTime(date.toLocaleTimeString());
-    return `${formattedDate} - ${hours}:${minutes}hs`;
+    return `${formattedDate} - ${serverAppointmentTime}hs`;
   };
 
   return (
     <div>
-      <p className="mb-2 w-full font-medium leading-none">
+      <p className="mb-2 w-full leading-none font-medium">
         {getDateAndTime(new Date(appointment.scheduledTime))}
       </p>
       <ul className="text-sm">

@@ -8,7 +8,7 @@ const Login = () => {
       <h1 className="mb-10 text-4xl font-bold">Log In</h1>
       <LoginForm />
       <div className="divider my-8"></div>
-      <Link href="/register" className="link-hover link text-xs text-primary">
+      <Link href="/register" className="link-hover link text-primary text-xs">
         No account yet? Sign Up
       </Link>
     </article>

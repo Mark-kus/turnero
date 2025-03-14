@@ -59,7 +59,7 @@ export async function startPasswordChange(
   if (tokenData.rows.length > 0) {
     return {
       errors: {
-        submit: ["Please wait before requesting another password change."],
+        submit: ["Please wait 15 minutes before requesting another password change."],
       },
     };
   }

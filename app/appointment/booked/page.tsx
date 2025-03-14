@@ -31,7 +31,12 @@ const SuspensedBookedAppointments = async () => {
       </NoResults>
     );
   }
-  
+
+  const getServerAppointmentTime = (date: Date) => {
+    const [hours, minutes] = date.toLocaleTimeString().split(":");
+    return `${hours}:${minutes}`;
+  };
+
   return (
     <>
       {!!comingAppointments.length && (
@@ -39,10 +44,13 @@ const SuspensedBookedAppointments = async () => {
           <h3 className="mb-4 font-semibold">Appointments coming soon</h3>
           <ul className="grid grid-cols-3 gap-4">
             {comingAppointments.map((appointment, index) => {
+              const serverAppointmentTime = getServerAppointmentTime(
+                new Date(appointment.scheduledTime),
+              );
               return (
                 <li key={index}>
                   <div
-                    className={"card card-side rounded-none bg-base-200 p-2"}
+                    className={"card card-side bg-base-200 rounded-none p-2"}
                   >
                     <figure>
                       <Image
@@ -50,13 +58,17 @@ const SuspensedBookedAppointments = async () => {
                         alt="Profile image"
                         width={100}
                         height={100}
-                        className="mb-auto mt-2"
+                        className="mt-2 mb-auto"
                       />
                       <div className="divider divider-horizontal m-1"></div>
                     </figure>
                     <div className="m-2 w-full">
-                      <AppointmentData appointment={appointment} />
+                      <AppointmentData
+                        serverAppointmentTime={serverAppointmentTime}
+                        appointment={appointment}
+                      />
                       <ComingOptionsButtons
+                        serverAppointmentTime={serverAppointmentTime}
                         disabled={appointment.status === 5}
                         appointment={appointment}
                       />
@@ -71,12 +83,15 @@ const SuspensedBookedAppointments = async () => {
       {!!dueAppointments.length && (
         <section>
           <h3 className="mb-4 font-semibold">Due appointments</h3>
-            <ul className="grid grid-cols-3 gap-4">
+          <ul className="grid grid-cols-3 gap-4">
             {dueAppointments.map((appointment, index) => {
+              const serverAppointmentTime = getServerAppointmentTime(
+                new Date(appointment.scheduledTime),
+              );
               return (
                 <li key={index}>
                   <div
-                    className={"card card-side rounded-none bg-base-200 p-2"}
+                    className={"card card-side bg-base-200 rounded-none p-2"}
                   >
                     <figure>
                       <Image
@@ -84,12 +99,15 @@ const SuspensedBookedAppointments = async () => {
                         alt="Profile image"
                         width={100}
                         height={100}
-                        className="mb-auto mt-2"
+                        className="mt-2 mb-auto"
                       />
                       <div className="divider divider-horizontal m-1"></div>
                     </figure>
                     <div className="m-2 w-full">
-                      <AppointmentData appointment={appointment} />
+                      <AppointmentData
+                        serverAppointmentTime={serverAppointmentTime}
+                        appointment={appointment}
+                      />
                       <DueOptionsButtons
                         disabled={Boolean(appointment.rating)}
                         appointment_id={appointment.appointmentId}

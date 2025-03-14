@@ -9,7 +9,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <Navbar />
       <div className="flex">
-        <div className="flex h-vh-nav w-2/5 items-center justify-center bg-gray-200">
+        <div className="h-vh-nav flex w-2/5 items-center justify-center bg-gray-200">
           <Image
             src={defaultImage}
             alt="Default Image"

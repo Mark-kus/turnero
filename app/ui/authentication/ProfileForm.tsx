@@ -54,7 +54,7 @@ export const ProfileForm = ({ account }: { account: Account }) => {
           <button
             type="button"
             onClick={handleFileUpload}
-            className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-white bg-opacity-70 text-sm font-medium text-black opacity-0 transition-opacity duration-300 hover:opacity-100"
+            className="bg-opacity-70 absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-white text-sm font-medium text-black opacity-0 transition-opacity duration-300 hover:opacity-100"
             disabled={isDisabled}
           >
             Editar
@@ -107,12 +107,18 @@ export const ProfileForm = ({ account }: { account: Account }) => {
         <label className="form-control w-full">
           <span className="mb-1 text-sm">Fecha de Nacimiento</span>
           <input
+            type="date"
+            className="input-unbordered validator"
+            required
+            placeholder="Pick a date"
+            min={new Date("1900-01-01").toISOString().split("T")[0]}
+            max={new Date().toISOString().split("T")[0]}
             name="birthdate"
-            className="input-unbordered"
-            placeholder="Fecha de Nacimiento"
             defaultValue={
               account.birthdate
-                ? getDateByISODate(account.birthdate).toISOString().split("T")[0]
+                ? getDateByISODate(account.birthdate)
+                    .toISOString()
+                    .split("T")[0]
                 : ""
             }
             disabled={isDisabled}
@@ -188,7 +194,7 @@ export const ProfileForm = ({ account }: { account: Account }) => {
           await startPasswordChange(undefined, formData);
         }}
         type="button"
-        className="btn btn-outline btn-primary btn-h-10 btn-round mt-4 w-full border-none bg-primary-content bg-opacity-40"
+        className="btn btn-outline btn-primary btn-h-10 btn-round bg-primary-content bg-opacity-40 mt-4 w-full border-none"
         disabled={isDisabled}
       >
         Cambiar contraseña

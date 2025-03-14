@@ -38,7 +38,7 @@ const HourOptions = ({
                 <li key={`${localSlot}`}>
                   <button
                     className={`btn btn-outline btn-primary btn-round h-20 w-full border-none font-medium ${
-                      selectedSlot === localSlot && "bg-primary !text-white"
+                      selectedSlot === localSlot && "bg-primary text-white!"
                     }`}
                     onClick={() => handleSlotClick(localSlot)}
                   >
@@ -60,7 +60,7 @@ const HourOptions = ({
                 <li key={`${localSlot}`}>
                   <button
                     className={`btn btn-outline btn-primary btn-round h-20 w-full border-none font-medium ${
-                      selectedSlot === localSlot && "bg-primary !text-white"
+                      selectedSlot === localSlot && "bg-primary text-white!"
                     }`}
                     onClick={() => handleSlotClick(localSlot)}
                   >
