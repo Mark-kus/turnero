@@ -1,9 +1,10 @@
 "use server";
 
-import { sql } from "@vercel/postgres";
-import { verifySession } from "@/app/lib/session";
-import { FormState } from "@/app/types";
-import { FamilyMemberSchema } from "@/app/lib/definitions";
+import {sql} from "@vercel/postgres";
+
+import {verifySession} from "@/app/lib/session";
+import {FormState} from "@/app/types";
+import {FamilyMemberSchema} from "@/app/lib/definitions";
 
 export async function createAdditional(formData: FormData): Promise<FormState> {
   const session = await verifySession();
@@ -22,7 +23,7 @@ export async function createAdditional(formData: FormData): Promise<FormState> {
     };
   }
 
-  const { name, surname, age, identification_number } = validationResult.data;
+  const {name, surname, age, identification_number} = validationResult.data;
 
   await sql`
         INSERT INTO additionals (name, surname, age, identification_number, account_id)
@@ -38,5 +39,5 @@ export async function createAdditional(formData: FormData): Promise<FormState> {
       `;
   const additional_id = results.rows[0].additional_id;
 
-  return { success: { data: additional_id } };
+  return {success: {data: additional_id}};
 }

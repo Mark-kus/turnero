@@ -57,6 +57,7 @@ const LoginForm = () => {
             className="absolute inset-y-0 right-0 px-4 py-2"
             type="button"
             onClick={togglePasswordVisibility}
+            aria-label="toggle visibility"
           >
             {showPassword ? (
               <Image
@@ -86,6 +87,7 @@ const LoginForm = () => {
           <br />
           At least one symbol
         </p>
+        {state?.errors?.password && <div className="validator-error">{state.errors.password[0]}</div>}
       </label>
       <div className="my-2 flex justify-between">
         <label className="label cursor-pointer flex-row-reverse justify-end p-0">
@@ -102,6 +104,11 @@ const LoginForm = () => {
         </Link>
       </div>
       <LoginButton />
+      <div className="text-center text-sm">
+        <Link href="/register" className="link link-hover">
+          No account yet? Sign up
+        </Link>
+      </div>
       {state?.errors?.submit && (
         <div
           aria-atomic="true"
@@ -134,11 +141,11 @@ function LoginButton() {
 
   return (
     <button
-      aria-disabled={pending}
+      disabled={pending}
       className={`btn btn-primary btn-h-10 btn-round mt-2 mb-10 w-full ${pending ? "btn-disabled" : ""}`}
       type="submit"
     >
-      Log In
+      {pending ? "Logging in..." : "Log In"}
     </button>
   );
 }

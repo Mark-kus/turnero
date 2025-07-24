@@ -1,6 +1,14 @@
 "use server";
 
-import { cookies } from "next/headers";
+import type {FormState} from "@/app/types";
+
+import {randomUUID} from "crypto";
+
+import {cookies} from "next/headers";
+import {sql} from "@vercel/postgres";
+import bcrypt from "bcrypt";
+import {redirect} from "next/navigation";
+import {PutBlobResult} from "@vercel/blob";
 
 import {
   ChangePasswordFormSchema,
@@ -8,17 +16,8 @@ import {
   ProfileFormSchema,
   SignupFormSchema,
 } from "@/app/lib/definitions";
-import type { FormState } from "@/app/types";
-import { sql } from "@vercel/postgres";
-import bcrypt from "bcrypt";
-import { createSession, deleteSession, verifySession } from "@/app/lib/session";
-import {
-  sendChangeEmail,
-  sendChangePassword,
-  sendVerifyEmail,
-} from "@/app/lib/email";
-import { redirect } from "next/navigation";
-import { PutBlobResult } from "@vercel/blob";
+import {sendChangeEmail, sendChangePassword, sendVerifyEmail} from "@/app/lib/email";
+import {createSession, deleteSession, verifySession} from "@/app/lib/session";
 
 export async function startPasswordChange(
   state: FormState,
@@ -28,10 +27,12 @@ export async function startPasswordChange(
 
   // If user is not logged in, get user by email recieved in form
   const email = formData.get("email");
+
   if (email) {
     const data = await sql`
     SELECT * FROM accounts WHERE email = ${email as string}
     `;
+
     user = data.rows[0];
 
     if (!user) {
@@ -49,6 +50,7 @@ export async function startPasswordChange(
     const data = await sql`
     SELECT * FROM accounts WHERE account_id = ${session.userId}
     `;
+
     user = data.rows[0];
   }
 
@@ -56,6 +58,7 @@ export async function startPasswordChange(
   const tokenData = await sql`
   SELECT * FROM accounts WHERE account_id = ${user.account_id} AND token_expiry > NOW() - INTERVAL '15 minutes'
   `;
+
   if (tokenData.rows.length > 0) {
     return {
       errors: {
@@ -67,7 +70,8 @@ export async function startPasswordChange(
   // Create token that expires in 24 hours
   const token = crypto.randomUUID();
   const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
-  await sql`
+
+  void sql`
   UPDATE accounts
   SET token = ${token}, token_expiry = ${token_expiry.toISOString()}
   WHERE account_id = ${user.account_id}
@@ -75,7 +79,7 @@ export async function startPasswordChange(
 
   // Send email for confirmation
   const tokenizedUrl = `${process.env.PROJECT_URL}/password/change?token=${token}`;
-  const { error } = await sendChangePassword([user.email], {
+  const {error} = await sendChangePassword([user.email], {
     firstName: user.first_name,
     tokenizedUrl,
   });
@@ -89,11 +93,9 @@ export async function startPasswordChange(
   }
 }
 
-export async function changePassword(
-  state: FormState,
-  formData: FormData,
-): Promise<FormState> {
+export async function changePassword(state: FormState, formData: FormData): Promise<FormState> {
   const token = formData.get("token");
+
   if (!token) {
     return {
       errors: {
@@ -113,7 +115,7 @@ export async function changePassword(
     };
   }
 
-  const { password, password_confirmation } = validationResult.data;
+  const {password, password_confirmation} = validationResult.data;
 
   if (password !== password_confirmation) {
     return {
@@ -137,9 +139,10 @@ export async function changePassword(
   }
 
   if (user.token_expiry < new Date()) {
-    sql`
+    void sql`
     UPDATE accounts SET token = NULL, token_expiry = NULL WHERE account_id = ${user.account_id}
     `;
+
     return {
       errors: {
         submit: ["Token expired."],
@@ -148,7 +151,8 @@ export async function changePassword(
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  sql`
+
+  void sql`
   UPDATE accounts
   SET hashed_password = ${hashedPassword}, token = NULL, token_expiry = NULL
   WHERE account_id = ${user.account_id}
@@ -159,10 +163,7 @@ export async function changePassword(
   redirect("/login");
 }
 
-export async function updateProfile(
-  state: FormState,
-  formData: FormData,
-): Promise<FormState> {
+export async function updateProfile(state: FormState, formData: FormData): Promise<FormState> {
   const session = await verifySession();
 
   // Validate user
@@ -183,16 +184,8 @@ export async function updateProfile(
     };
   }
 
-  const {
-    first_name,
-    last_name,
-    email,
-    birthdate,
-    city,
-    address,
-    phone,
-    avatar,
-  } = validationResult.data;
+  const {first_name, last_name, email, birthdate, city, address, phone, avatar} =
+    validationResult.data;
 
   const data = await sql`
   SELECT * FROM accounts WHERE account_id = ${session.userId}
@@ -216,7 +209,8 @@ export async function updateProfile(
     // Create token that expires in 24 hours
     const token = crypto.randomUUID();
     const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
-    sql`
+
+    void sql`
     UPDATE accounts
     SET token = ${token}, token_expiry = ${token_expiry.toISOString()}
     WHERE account_id = ${session.userId}
@@ -224,7 +218,7 @@ export async function updateProfile(
 
     // Send email for confirmation
     const tokenizedUrl = `${process.env.PROJECT_URL}/api/change-email?token=${token}&email=${email}`;
-    const { error } = await sendChangeEmail([email], {
+    const {error} = await sendChangeEmail([email], {
       firstName: first_name,
       tokenizedUrl,
     });
@@ -249,7 +243,8 @@ export async function updateProfile(
       },
     );
     const newBlob = (await response.json()) as PutBlobResult;
-    sql`
+
+    void sql`
     UPDATE accounts
     SET avatar_url = ${newBlob.url}
     WHERE account_id = ${session.userId}
@@ -259,23 +254,20 @@ export async function updateProfile(
     if (user.avatar_url) {
       fetch(
         `${process.env.PROJECT_URL}/api/avatar/upload?filename=${user.avatar_url.split("/").pop()}`,
-        { method: "DELETE" },
+        {method: "DELETE"},
       );
     }
   }
 
   // Update user
-  sql`
+  void sql`
     UPDATE accounts
     SET first_name = ${first_name}, last_name = ${last_name}, birthdate = ${birthdate}, city = ${city}, address = ${address}, phone = ${phone}
     WHERE account_id = ${session.userId}
   `;
 }
 
-export async function signup(
-  state: FormState,
-  formData: FormData,
-): Promise<FormState> {
+export async function signup(state: FormState, formData: FormData): Promise<FormState> {
   // Validate user
   const validationResult = SignupFormSchema.safeParse({
     first_name: formData.get("first_name"),
@@ -290,7 +282,7 @@ export async function signup(
     };
   }
 
-  const { first_name, last_name, email, password } = validationResult.data;
+  const {first_name, last_name, email, password} = validationResult.data;
 
   // Check if user email exists
   const userExistsCount = await sql`
@@ -307,16 +299,17 @@ export async function signup(
 
   // Create user with token that expires in 24 hours
   const hashedPassword = await bcrypt.hash(password, 10);
-  const token = crypto.randomUUID();
+  const token = randomUUID();
   const token_expiry = new Date(Date.now() + 1000 * 60 * 60 * 24);
-  sql`
+
+  void sql`
   INSERT INTO accounts (first_name, last_name, email, hashed_password, token, token_expiry)
   VALUES (${first_name}, ${last_name}, ${email}, ${hashedPassword}, ${token}, ${token_expiry.toISOString()})
   `;
 
   // Send email for confirmation
   const tokenizedUrl = `${process.env.PROJECT_URL}/api/verify?token=${token}`;
-  const { error } = await sendVerifyEmail([email], {
+  const {error} = await sendVerifyEmail([email], {
     firstName: first_name,
     tokenizedUrl,
   });
@@ -334,10 +327,7 @@ export async function signup(
   redirect("/verify");
 }
 
-export async function login(
-  state: FormState,
-  formData: FormData,
-): Promise<FormState> {
+export async function login(state: FormState, formData: FormData): Promise<FormState> {
   // 1. Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
     email: formData.get("email"),
@@ -370,15 +360,13 @@ export async function login(
       submit: ["Invalid login credentials."],
     },
   };
+
   if (!user) {
     return invalidCredentialsError;
   }
 
   // 3. Compare the user's password with the hashed password in the database
-  const passwordMatch = await bcrypt.compare(
-    validatedFields.data.password,
-    user.hashed_password,
-  );
+  const passwordMatch = await bcrypt.compare(validatedFields.data.password, user.hashed_password);
 
   // If the password does not match, return early
   if (!passwordMatch) {
@@ -400,6 +388,7 @@ export async function login(
     role: user.role,
     avatarUrl: user.avatar_url,
   };
+
   await createSession(sessionData);
 }
 

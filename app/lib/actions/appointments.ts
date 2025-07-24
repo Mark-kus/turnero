@@ -1,16 +1,16 @@
 "use server";
 
-import { sql } from "@vercel/postgres";
-import { verifySession } from "@/app/lib/session";
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { AppointmentData, Review } from "@/app/types";
+import {sql} from "@vercel/postgres";
+import {redirect} from "next/navigation";
+import {revalidatePath} from "next/cache";
+
+import {verifySession} from "@/app/lib/session";
+import {AppointmentData, Review} from "@/app/types";
 
 export async function scheduleAppointment(appointmentData: AppointmentData) {
-  const session = await verifySession();
+  await verifySession();
 
-  const { scheduled_time, account_id, additional_id, professional_id } =
-    appointmentData;
+  const {scheduled_time, account_id, additional_id, professional_id} = appointmentData;
 
   if (additional_id) {
     await sql`
@@ -29,9 +29,9 @@ export async function scheduleAppointment(appointmentData: AppointmentData) {
 }
 
 export async function rescheduleAppointment(appointmentData: AppointmentData) {
-  const session = await verifySession();
+  await verifySession();
 
-  const { appointment_id, scheduled_time } = appointmentData;
+  const {appointment_id, scheduled_time} = appointmentData;
 
   await sql`
     UPDATE appointments
@@ -44,7 +44,7 @@ export async function rescheduleAppointment(appointmentData: AppointmentData) {
 }
 
 export async function cancelAppointment(appointment_id: number) {
-  const session = await verifySession();
+  await verifySession();
 
   await sql`
     UPDATE appointments
@@ -56,7 +56,7 @@ export async function cancelAppointment(appointment_id: number) {
 }
 
 export async function leaveReview(review: Review) {
-  const session = await verifySession();
+  await verifySession();
 
   if (review.comment) {
     await sql`
