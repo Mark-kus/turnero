@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Children, Suspense} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import defaultProfile from "@public/default/profile.svg";
@@ -38,14 +38,14 @@ const SuspensedBookedAppointments = async () => {
       {!!comingAppointments.length && (
         <section>
           <h3 className="mb-4 font-semibold">Appointments coming soon</h3>
-          <ul className="grid grid-cols-3 gap-4">
+          <FadeInGrid>
             {comingAppointments.map((appointment, index) => {
               const serverAppointmentTime = getServerAppointmentTime(
                 new Date(appointment.scheduledTime),
               );
 
               return (
-                <li key={index}>
+                <div key={index}>
                   <div className="card card-side bg-base-200 rounded-none p-2">
                     <figure>
                       <Image
@@ -69,23 +69,23 @@ const SuspensedBookedAppointments = async () => {
                       />
                     </div>
                   </div>
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </FadeInGrid>
         </section>
       )}
       {!!dueAppointments.length && (
         <section>
           <h3 className="mb-4 font-semibold">Due appointments</h3>
-          <ul className="grid grid-cols-3 gap-4">
+          <FadeInGrid>
             {dueAppointments.map((appointment, index) => {
               const serverAppointmentTime = getServerAppointmentTime(
                 new Date(appointment.scheduledTime),
               );
 
               return (
-                <li key={index}>
+                <div key={index}>
                   <div className="card card-side bg-base-200 rounded-none p-2">
                     <figure>
                       <Image
@@ -108,10 +108,10 @@ const SuspensedBookedAppointments = async () => {
                       />
                     </div>
                   </div>
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </FadeInGrid>
         </section>
       )}
     </>
@@ -139,5 +139,23 @@ const BookedAppointments = () => {
     </main>
   );
 };
+
+function FadeInGrid({children}: {children: React.ReactNode[]}) {
+  return (
+    <div className="grid w-full grid-cols-3 justify-between gap-6">
+      {Children.toArray(children).map((child, idx) => (
+        <div
+          key={idx}
+          style={{
+            opacity: 0,
+            animation: `fadeInUp 0.5s ease-out forwards ${idx * 100}ms`,
+          }}
+        >
+          {child}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default BookedAppointments;
