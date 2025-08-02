@@ -2,8 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@public/*": ["./public/*"]
+      "@/shared/*": ["./src/domains/shared/*"],
+      "@/auth/*": ["./src/domains/auth/*"],
+      "@/provider/*": ["./src/domains/provider/*"],
+      "@/patient/*": ["./src/domains/patient/*"],
+      "@/professional/*": ["./src/domains/professional/*"],
+      "@public/*": ["./public/*"],
+      "@/*": ["./*"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "target": "es2022",
