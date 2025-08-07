@@ -1,4 +1,4 @@
-import ChangePasswordForm from "@/auth/components/forms/ChangePasswordForm";
+import {SuspensedChangePasswordForm} from "@/auth/components/forms/ChangePasswordForm";
 
 const ChangePassword = () => {
   return (
@@ -8,7 +8,7 @@ const ChangePassword = () => {
         Ingresá tu nueva contraseña. Debe ser distinta a la contraseña anterior. Una vez que
         confirmado, podrás ingresar a la plataforma con la contraseña nueva.
       </p>
-      <ChangePasswordForm />
+      <SuspensedChangePasswordForm />
     </article>
   );
 };

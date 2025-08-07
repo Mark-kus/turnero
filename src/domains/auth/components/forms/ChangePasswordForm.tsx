@@ -2,6 +2,7 @@
 
 import {useSearchParams} from "next/navigation";
 import {useFormState, useFormStatus} from "react-dom";
+import {Suspense} from "react";
 
 import {SEARCH_PARAMS} from "@/shared/constants";
 import {changePassword} from "@/auth/actions/change-password.action";
@@ -78,5 +79,13 @@ function Button() {
     </button>
   );
 }
+
+export const SuspensedChangePasswordForm = () => {
+  return (
+    <Suspense>
+      <ChangePasswordForm />
+    </Suspense>
+  );
+};
 
 export default ChangePasswordForm;
