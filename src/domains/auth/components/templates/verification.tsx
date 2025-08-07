@@ -1,4 +1,4 @@
-import {EmailTemplateProps} from "@/shared/types";
+import {EmailTemplateProps} from "@/shared/types/common";
 
 export default function VerificationTemplate({firstName, tokenizedUrl}: EmailTemplateProps) {
   return (

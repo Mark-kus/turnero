@@ -1,4 +1,4 @@
-import {EmailTemplateProps} from "@/shared/types";
+import {EmailTemplateProps} from "@/shared/types/common";
 
 export default function PasswordChangeTemplate({firstName, tokenizedUrl}: EmailTemplateProps) {
   return (
