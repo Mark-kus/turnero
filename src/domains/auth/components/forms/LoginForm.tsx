@@ -132,11 +132,6 @@ const LoginForm = ({accountEmail}: {accountEmail: string | undefined}) => {
           Your email has been verified successfully. You can now log in.
         </p>
       )}
-      <div className="text-center text-sm">
-        <Link className="link link-hover" href="/register">
-          No account yet? Sign up
-        </Link>
-      </div>
     </form>
   );
 };
