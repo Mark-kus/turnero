@@ -112,7 +112,7 @@ const LoginForm = ({accountEmail}: {accountEmail: string | undefined}) => {
           role="alert"
         >
           <svg
-            className="h-6 w-6 shrink-0 stroke-current"
+            className="h-6 w-6 shrink-0 stroke-white"
             fill="none"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +124,7 @@ const LoginForm = ({accountEmail}: {accountEmail: string | undefined}) => {
               strokeWidth="2"
             />
           </svg>
-          <p className="text-sm">{state.errors.submit[0]}</p>
+          <p className="text-error-content text-sm">{state.errors.submit[0]}</p>
         </div>
       )}
       {emailVerified && (
