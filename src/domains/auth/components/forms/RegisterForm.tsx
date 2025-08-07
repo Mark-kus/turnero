@@ -27,9 +27,9 @@ const RegisterForm = () => {
             maxLength={30}
             minLength={3}
             name="firstName"
-            pattern="[A-Za-z][A-Za-z0-9\-]*"
+            pattern="[A-Za-z][A-Za-z .\-]*"
             placeholder="First Name"
-            title="Only letters"
+            title="Letters, spaces, periods, and hyphens allowed"
             type="input"
           />
           <p className="validator-hint">Must be 3 to 30 characters long</p>
@@ -45,9 +45,9 @@ const RegisterForm = () => {
             maxLength={30}
             minLength={3}
             name="lastName"
-            pattern="[A-Za-z][A-Za-z0-9\-]*"
+            pattern="[A-Za-z][A-Za-z .\-]*"
             placeholder="Last Name"
-            title="Only letters"
+            title="Letters, spaces, periods, and hyphens allowed"
             type="input"
           />
           <p className="validator-hint">Must be 3 to 30 characters long</p>
