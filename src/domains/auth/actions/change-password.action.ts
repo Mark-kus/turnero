@@ -2,15 +2,18 @@
 
 import {redirect} from "next/navigation";
 
-import {SqlAccountRepository} from "@/auth/adapters/sql-account.adapter";
+import {VercelAccountRepository} from "@/auth/adapters/vercel-account.adapter";
 import {ChangePasswordSchema} from "@/auth/schemas/change-passowrd.schema";
-import {BcryptService} from "@/auth/services/bcrypt.service";
-import {FormState} from "@/shared/types";
 import {ChangePasswordUseCase} from "@/auth/use-cases/change-password.use-case";
 import {logout} from "@/auth/actions/logout.action";
-import {ChangePasswordDTO} from "@/auth/dtos/change-password.dto";
+import {ChangePasswordDto} from "@/auth/dtos/change-password.dto";
+import {BcryptHasher} from "@/auth/adapters/bcrypt.adapter";
+import {ChangePasswordFormState} from "@/shared/types/auth";
 
-export async function changePassword(state: FormState, formData: FormData): Promise<FormState> {
+export async function changePassword(
+  state: ChangePasswordFormState,
+  formData: FormData,
+): Promise<ChangePasswordFormState> {
   const result = ChangePasswordSchema.safeParse({
     token: formData.get("token"),
     password: formData.get("password"),
@@ -23,12 +26,12 @@ export async function changePassword(state: FormState, formData: FormData): Prom
     };
   }
 
-  const repository = new SqlAccountRepository();
-  const hasher = new BcryptService();
+  const repository = new VercelAccountRepository();
+  const hasher = new BcryptHasher();
 
   const useCase = new ChangePasswordUseCase(repository, hasher);
 
-  const dto: ChangePasswordDTO = {
+  const dto: ChangePasswordDto = {
     token: result.data.token,
     password: result.data.password,
   };

@@ -1,15 +1,20 @@
 "use server";
 
-import {verifySession} from "@/auth/adapters/session";
-import {SqlAccountRepository} from "@/auth/adapters/sql-account.adapter";
-import {UpdateProfileDTO} from "@/auth/dtos/update-profile.dto";
+import {ResendEmailSender} from "@/auth/adapters/resend-email.adapter";
+import {JoseSessionAdapter} from "@/auth/adapters/jose-session.adapter";
+import {VercelAccountRepository} from "@/auth/adapters/vercel-account.adapter";
+import {VercelBlobService} from "@/auth/adapters/vercel-blob.adapter";
+import {UpdateProfileDto} from "@/auth/dtos/update-profile.dto";
 import {UpdateProfileSchema} from "@/auth/schemas/update-profile.schema";
-import {EmailService} from "@/auth/services/email.service";
 import {UpdateProfileUseCase} from "@/auth/use-cases/update-profile.use-case";
-import {FormState} from "@/shared/types";
+import {UpdateProfileFormState} from "@/shared/types/auth";
 
-export async function updateProfile(state: FormState, formData: FormData): Promise<FormState> {
-  const {accountId} = await verifySession();
+export async function updateProfile(
+  state: UpdateProfileFormState,
+  formData: FormData,
+): Promise<UpdateProfileFormState> {
+  const sessionAdapter = new JoseSessionAdapter();
+  const {accountId} = await sessionAdapter.verifySession();
 
   const avatarFile = formData.get("avatar") as File | null;
   const avatar = avatarFile && avatarFile.size > 0 ? avatarFile : undefined;
@@ -31,12 +36,13 @@ export async function updateProfile(state: FormState, formData: FormData): Promi
     };
   }
 
-  const repository = new SqlAccountRepository();
-  const mailer = new EmailService();
+  const repository = new VercelAccountRepository();
+  const mailer = new ResendEmailSender();
+  const blobUploader = new VercelBlobService();
 
-  const useCase = new UpdateProfileUseCase(repository, mailer);
+  const useCase = new UpdateProfileUseCase(repository, mailer, blobUploader);
 
-  const dto: UpdateProfileDTO = {
+  const dto: UpdateProfileDto = {
     accountId,
     firstName: result.data.firstName,
     lastName: result.data.lastName,

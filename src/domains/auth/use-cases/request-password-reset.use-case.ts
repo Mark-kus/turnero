@@ -1,6 +1,6 @@
-import {RequestPasswordResetDTO} from "@/auth/dtos/request-reset-password.dto";
-import {AccountRepository} from "@/auth/ports/account.repository";
-import {EmailSender} from "@/auth/ports/email.port";
+import {RequestPasswordResetDto} from "@/auth/dtos/request-reset-password.dto";
+import {AccountRepository} from "@/auth/contracts/account.repository";
+import {EmailSender} from "@/auth/contracts/email.port";
 import {TOKEN} from "@/shared/constants";
 
 export class RequestPasswordResetUseCase {
@@ -9,7 +9,7 @@ export class RequestPasswordResetUseCase {
     private mailer: EmailSender,
   ) {}
 
-  async execute(dto: RequestPasswordResetDTO) {
+  async execute(dto: RequestPasswordResetDto) {
     const {email, sessionAccountId} = dto;
 
     const account = email

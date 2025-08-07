@@ -1,14 +1,14 @@
-import {ChangePasswordDTO} from "@/auth/dtos/change-password.dto";
-import {AccountRepository} from "@/auth/ports/account.repository";
-import {HashService} from "@/auth/ports/hash.port";
+import {ChangePasswordDto} from "@/auth/dtos/change-password.dto";
+import {AccountRepository} from "@/auth/contracts/account.repository";
+import {Hasher} from "@/auth/contracts/hash.port";
 
 export class ChangePasswordUseCase {
   constructor(
     private repository: AccountRepository,
-    private hasher: HashService,
+    private hasher: Hasher,
   ) {}
 
-  async execute(dto: ChangePasswordDTO) {
+  async execute(dto: ChangePasswordDto) {
     const {token, password} = dto;
 
     const account = await this.repository.findOneByToken(token);

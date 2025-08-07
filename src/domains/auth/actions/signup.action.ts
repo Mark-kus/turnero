@@ -3,15 +3,18 @@
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
-import {CreateAccountUseCase} from "@/auth/use-cases/create-account.use-case";
-import {BcryptService} from "@/auth/services/bcrypt.service";
-import {EmailService} from "@/auth/services/email.service";
-import {FormState} from "@/shared/types";
+import {SignupUseCase} from "@/auth/use-cases/signup.use-case";
 import {SignupSchema} from "@/auth/schemas/signup.schema";
-import {SqlAccountRepository} from "@/auth/adapters/sql-account.adapter";
+import {VercelAccountRepository} from "@/auth/adapters/vercel-account.adapter";
 import {COOKIES} from "@/shared/constants";
+import {BcryptHasher} from "@/auth/adapters/bcrypt.adapter";
+import {ResendEmailSender} from "@/auth/adapters/resend-email.adapter";
+import {RegisterFormState} from "@/shared/types/auth";
 
-export async function signup(state: FormState, formData: FormData): Promise<FormState> {
+export async function signup(
+  state: RegisterFormState,
+  formData: FormData,
+): Promise<RegisterFormState> {
   const result = SignupSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -23,11 +26,11 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
     return {errors: result.error.flatten().fieldErrors};
   }
 
-  const repository = new SqlAccountRepository();
-  const hasher = new BcryptService();
-  const mailer = new EmailService();
+  const repository = new VercelAccountRepository();
+  const hasher = new BcryptHasher();
+  const mailer = new ResendEmailSender();
 
-  const useCase = new CreateAccountUseCase(repository, hasher, mailer);
+  const useCase = new SignupUseCase(repository, hasher, mailer);
 
   try {
     await useCase.execute(result.data);

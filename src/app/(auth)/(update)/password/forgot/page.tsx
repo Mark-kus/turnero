@@ -1,7 +1,7 @@
 import React from "react";
 import {cookies} from "next/headers";
 
-import ForgotPasswordForm from "@/auth/components/ForgotPasswordForm";
+import ForgotPasswordForm from "@/auth/components/forms/ForgotPasswordForm";
 import {COOKIES} from "@/shared/constants";
 
 const ForgotPassword = () => {

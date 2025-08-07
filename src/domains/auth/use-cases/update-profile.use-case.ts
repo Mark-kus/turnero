@@ -1,17 +1,17 @@
-import {PutBlobResult} from "@vercel/blob";
-
-import {UpdateProfileDTO} from "@/auth/dtos/update-profile.dto";
-import {AccountRepository} from "@/auth/ports/account.repository";
-import {EmailSender} from "@/auth/ports/email.port";
+import {UpdateProfileDto} from "@/auth/dtos/update-profile.dto";
+import {AccountRepository} from "@/auth/contracts/account.repository";
+import {EmailSender} from "@/auth/contracts/email.port";
 import {TOKEN} from "@/shared/constants";
+import {BlobUploader} from "@/auth/contracts/blob-upload.port";
 
 export class UpdateProfileUseCase {
   constructor(
     private repository: AccountRepository,
     private mailer: EmailSender,
+    private blobUploader: BlobUploader,
   ) {}
 
-  async execute(dto: UpdateProfileDTO) {
+  async execute(dto: UpdateProfileDto) {
     const account = await this.repository.findOneById(dto.accountId);
 
     void this.repository.updateDetails(
@@ -27,23 +27,16 @@ export class UpdateProfileUseCase {
     // If avatar is provided, upload it, update the account and delete the old one
     if (dto.avatar) {
       const filename = crypto.randomUUID();
-      const response = await fetch(
-        `${process.env.PROJECT_URL}/api/avatar/upload?filename=${filename}`,
-        {
-          method: "POST",
-          body: dto.avatar,
-        },
-      );
-      const newBlob = (await response.json()) as PutBlobResult;
+      const blobUrl = await this.blobUploader.upload(dto.avatar, filename);
 
+      // Borrar anterior si existe
       if (account.avatar_url) {
-        fetch(
-          `${process.env.PROJECT_URL}/api/avatar/upload?filename=${account.avatar_url.split("/").pop()}`,
-          {method: "DELETE"},
-        );
+        const oldFilename = account.avatar_url.split("/").pop();
+
+        if (oldFilename) await this.blobUploader.delete(oldFilename);
       }
 
-      void this.repository.updateAvatar(dto.accountId, newBlob.url);
+      void this.repository.updateAvatar(dto.accountId, blobUrl);
     }
 
     // If email has changed, send verification email

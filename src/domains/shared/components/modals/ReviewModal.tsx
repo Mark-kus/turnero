@@ -1,8 +1,9 @@
 "use client";
-import React, {useState, useRef} from "react";
 
-import {leaveReview} from "@/professional/actions/appointments";
-import {Rating} from "@/shared/types";
+import {useState, useRef} from "react";
+
+import {Rating} from "@/shared/types/patient";
+import {createReview} from "@/professional/actions/create-review.action";
 
 const ReviewModal = () => {
   const [rating, setRating] = useState<Rating>(5);
@@ -21,9 +22,9 @@ const ReviewModal = () => {
       const appointmentId = appointmentIdRef.current.value;
 
       if (appointmentId !== undefined) {
-        leaveReview({
+        createReview({
           rating,
-          comment,
+          comment: comment || null,
           appointmentId: parseInt(appointmentId),
         });
         closeModal();

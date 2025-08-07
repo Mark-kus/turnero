@@ -1,4 +1,4 @@
-export interface ChangePasswordDTO {
+export interface ChangePasswordDto {
   token: string;
   password: string;
 }

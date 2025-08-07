@@ -1,7 +1,7 @@
-import {AccountEntity} from "@/auth/entities/account.entity";
-import {Role} from "@/shared/types";
+import {AccountEntity} from "@/auth/dtos/account.entity";
+import {Role} from "@/shared/types/auth";
 
-export interface AccountDTO {
+export interface AccountDto {
   accountId: string;
   email: string;
   firstName: string;
@@ -18,7 +18,7 @@ export interface AccountDTO {
   enabled: boolean;
 }
 
-export function toAccountDTO(data: AccountEntity): AccountDTO {
+export function toAccountDto(data: AccountEntity): AccountDto {
   return {
     accountId: data.account_id,
     email: data.email,

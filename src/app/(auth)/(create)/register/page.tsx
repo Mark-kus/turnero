@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-import RegisterForm from "@/auth/components/RegisterForm";
+import RegisterForm from "@/auth/components/forms/RegisterForm";
 
 const Register = () => {
   return (

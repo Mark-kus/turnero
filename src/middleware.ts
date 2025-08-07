@@ -1,7 +1,9 @@
 import {NextRequest, NextResponse} from "next/server";
 import {cookies} from "next/headers";
 
-import {decrypt} from "@/auth/adapters/session";
+import {JoseSessionAdapter} from "@/auth/adapters/jose-session.adapter";
+
+const sessionAdapter = new JoseSessionAdapter();
 
 // 1. Specify protected and public routes
 const protectedRoutes = ["/appointment"];
@@ -15,7 +17,7 @@ export default async function middleware(req: NextRequest) {
 
   // 3. Decrypt the session from the cookie
   const cookie = cookies().get("session")?.value;
-  const session = await decrypt(cookie);
+  const session = await sessionAdapter.decrypt(cookie);
 
   // 4. Redirect
   if (isProtectedRoute && !session?.accountId) {

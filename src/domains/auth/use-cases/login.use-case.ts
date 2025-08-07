@@ -1,15 +1,15 @@
-import {LoginDTO} from "@/auth/dtos/login.dto";
-import {AccountRepository} from "@/auth/ports/account.repository";
-import {HashService} from "@/auth/ports/hash.port";
-import {SessionData} from "@/shared/types";
+import {LoginDto} from "@/auth/dtos/login.dto";
+import {AccountRepository} from "@/auth/contracts/account.repository";
+import {Hasher} from "@/auth/contracts/hash.port";
+import {SessionData} from "@/shared/types/auth";
 
 export class LoginUseCase {
   constructor(
     private repository: AccountRepository,
-    private hasher: HashService,
+    private hasher: Hasher,
   ) {}
 
-  async execute(dto: LoginDTO): Promise<SessionData> {
+  async execute(dto: LoginDto): Promise<SessionData> {
     const account = await this.repository.findOneByEmail(dto.email);
 
     const isValid = await this.hasher.compare(dto.password, account.hashed_password);

@@ -1,4 +1,4 @@
-export interface UpdateProfileDTO {
+export interface UpdateProfileDto {
   accountId: string;
   email: string;
   firstName: string;

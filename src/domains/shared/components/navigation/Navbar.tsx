@@ -5,10 +5,15 @@ import Image from "next/image";
 import defaultProfile from "@/public/default/profile.svg";
 import NavLinks from "@/shared/components/navigation/NavLinks";
 import SignoutButton from "@/shared/components/navigation/SignoutButton";
-import {verifySession} from "@/auth/adapters/session";
+import {JoseSessionAdapter} from "@/auth/adapters/jose-session.adapter";
 
 export default async function Navbar() {
-  const {role, avatarUrl} = await verifySession();
+  const sessionAdapter = new JoseSessionAdapter();
+  const {role, avatarUrl} = await sessionAdapter.verifySession();
+
+  if (!role) {
+    return <div />;
+  }
 
   if (role === "provider") {
     return <StablishmentNavbar />;
@@ -29,7 +34,7 @@ function ProfessionalNavbar() {
   return <div>You are professional</div>;
 }
 
-function PatientNavbar({avatarUrl}: {avatarUrl: string | undefined}) {
+function PatientNavbar({avatarUrl}: {avatarUrl: string | null}) {
   return (
     <div className="navbar bg-base-300 px-8">
       <div className="flex-1">

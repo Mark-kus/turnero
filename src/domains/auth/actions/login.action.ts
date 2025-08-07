@@ -4,13 +4,14 @@ import {cookies} from "next/headers";
 
 import {LoginSchema} from "@/auth/schemas/login.schema";
 import {COOKIES} from "@/shared/constants";
-import {FormState} from "@/shared/types";
-import {SqlAccountRepository} from "@/auth/adapters/sql-account.adapter";
-import {BcryptService} from "@/auth/services/bcrypt.service";
+import {LoginFormState} from "@/shared/types/auth";
+import {VercelAccountRepository} from "@/auth/adapters/vercel-account.adapter";
 import {LoginUseCase} from "@/auth/use-cases/login.use-case";
-import {createSession} from "@/auth/adapters/session";
+import {JoseSessionAdapter} from "@/auth/adapters/jose-session.adapter";
+import {BcryptHasher} from "@/auth/adapters/bcrypt.adapter";
+import {throwNextRedirectError} from "@/shared/utils/error";
 
-export async function login(state: FormState, formData: FormData): Promise<FormState> {
+export async function login(state: LoginFormState, formData: FormData): Promise<LoginFormState> {
   const result = LoginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -29,16 +30,18 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
     cookies().delete(COOKIES.ACCOUNT_EMAIL);
   }
 
-  const repository = new SqlAccountRepository();
-  const hasher = new BcryptService();
+  const repository = new VercelAccountRepository();
+  const hasher = new BcryptHasher();
+  const sessionAdapter = new JoseSessionAdapter();
 
   const useCase = new LoginUseCase(repository, hasher);
 
   try {
     const sessionData = await useCase.execute(result.data);
 
-    await createSession(sessionData);
+    await sessionAdapter.createSession(sessionData);
   } catch (e: any) {
+    throwNextRedirectError(e);
     switch (e.message) {
       case "Account is not verified.":
         return {

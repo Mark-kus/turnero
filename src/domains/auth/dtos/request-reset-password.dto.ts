@@ -1,4 +1,4 @@
-export type RequestPasswordResetDTO = {
+export type RequestPasswordResetDto = {
   email: string;
   sessionAccountId: number | null;
 };

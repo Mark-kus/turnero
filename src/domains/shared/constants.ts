@@ -1,8 +1,9 @@
 import {randomUUID} from "crypto";
 
-import {AppointmentStatus, DayOfWeek} from "@/shared/types";
+import {DayOfWeek} from "@/shared/types/common";
+import {AppointmentStatus} from "@/shared/types/patient";
 
-export const AVATARS_FOLDER = "avatars";
+export const AVATARS_FOLDER_NAME = "avatars";
 
 export const WEEK_DAYS: DayOfWeek[] = [
   "Sunday",
@@ -14,7 +15,7 @@ export const WEEK_DAYS: DayOfWeek[] = [
   "Saturday",
 ];
 
-export const APPOINTMENT_STATUS: AppointmentStatus[] = [
+export const APPOINTMENT_STATUS_OPTIONS: AppointmentStatus[] = [
   "Pending",
   "Approved",
   "Denied",
@@ -22,9 +23,9 @@ export const APPOINTMENT_STATUS: AppointmentStatus[] = [
   "Cancelled",
 ];
 
-export const slotDurations = [15, 30, 60]; // In minutes
+export const SLOT_DURATIONS = [15, 30, 60]; // In minutes
 
-export const recurrencePeriods = [1, 3, 6]; // In months
+export const RECURRENCE_PERIODS = [1, 3, 6]; // In months
 
 export const TOKEN = {
   getToken: () => randomUUID(),

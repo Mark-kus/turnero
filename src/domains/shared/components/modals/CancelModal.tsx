@@ -1,7 +1,7 @@
 "use client";
 import React, {useRef} from "react";
 
-import {cancelAppointment} from "@/professional/actions/appointments";
+import {cancelAppointment} from "@/professional/actions/cancel-appointment.action";
 
 const CancelModal = () => {
   const cancelModalRef = useRef<HTMLDialogElement>(null);

@@ -1,7 +1,9 @@
 "use server";
 
-import {deleteSession} from "@/auth/adapters/session";
+import {JoseSessionAdapter} from "@/auth/adapters/jose-session.adapter";
 
 export async function logout() {
-  deleteSession();
+  const sessionAdapter = new JoseSessionAdapter();
+
+  sessionAdapter.deleteSession();
 }

@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import {cookies} from "next/headers";
 
-import LoginForm from "@/auth/components/LoginForm";
+import LoginForm from "@/auth/components/forms/LoginForm";
 import {COOKIES} from "@/shared/constants";
 
 const Login = () => {

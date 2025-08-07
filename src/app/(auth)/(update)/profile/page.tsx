@@ -1,17 +1,18 @@
 import React from "react";
 
-import {ProfileForm} from "@/auth/components/ProfileForm";
-import {SqlAccountRepository} from "@/auth/adapters/sql-account.adapter";
-import {verifySession} from "@/auth/adapters/session";
-import {toAccountDTO} from "@/auth/dtos/account.dto";
+import {ProfileForm} from "@/auth/components/forms/ProfileForm";
+import {VercelAccountRepository} from "@/auth/adapters/vercel-account.adapter";
+import {toAccountDto} from "@/auth/dtos/account.dto";
+import {JoseSessionAdapter} from "@/auth/adapters/jose-session.adapter";
 
-const repository = new SqlAccountRepository();
+const session = new JoseSessionAdapter();
+const repository = new VercelAccountRepository();
 
 const Profile = async () => {
-  const {accountId} = await verifySession();
+  const {accountId} = await session.verifySession();
   const raw_account = await repository.findOneById(accountId);
 
-  const account = toAccountDTO(raw_account);
+  const account = toAccountDto(raw_account);
 
   return (
     <article className="m-auto">
