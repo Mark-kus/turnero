@@ -1,54 +1,59 @@
-# Turnero
+# Project Technologies & Architecture
 
-A Next.js appointment booking application.
+## Technologies Used
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Zod
+- Vercel Postgres
+- Resend
 
-## Requirements
+## Project Structure
 
-- **Node.js**: 22.0.0 or higher
-- **npm**: Latest version recommended
+The app follows a domain-driven design with minimal routing logic. Main domains include:
+- auth
+- patient
+- professional
+- provider
+- shared
 
-## Getting Started
+### Domain Structure
+Each domain (except shared) contains:
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+#### `actions/`
+Server actions combining logic with services for abstraction and agnosticism
 
-2. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
+#### `adapters/`
+Service and library adapters (Resend, Vercel, bcrypt, etc.)
+- Read models for multi-table queries
+- Repositories focus solely on data retrieval of specific tables
+- Adaptations of libraries that follow a common interface for easy swapping
 
-3. **Open your browser:**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+#### `components/`
+UI components specific to the domain
 
-## Scripts
+#### `contracts/`
+Interfaces implemented by adapters ensuring interchangeability
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run test` - Run tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Run tests with coverage
+#### `dtos/`
+Data transfer interfaces:
+- `entity/`: Raw table SELECT * interfaces (snake_case)
+- `raw/`: Multi-table SELECT interfaces (snake_case)
+- `dto/`: Processed SELECT interfaces (camelCase)
 
-## Node.js 22 Migration
+#### `schemas/`
+Zod data validations
 
-This project has been migrated to Node.js 22 for improved performance and modern JavaScript features:
+#### `use-cases/`
+Business logic implementations:
+- Called from actions or components
+- Receive adapters through contracts for flexibility
 
-- Updated `.nvmrc` to specify Node.js 22
-- Added `engines` field in `package.json` to ensure Node.js 22+ compatibility
-- Updated TypeScript configuration to target ES2022
-- Updated Jest configuration for better ES modules support
+### Shared Domain
+Contains common resources:
 
-## Environment
-
-Make sure you're using Node.js 22 by running:
-```bash
-node --version
-```
-
-If using nvm:
-```bash
-nvm use
-```
+- `components/`: Shared UI components
+- `styles/`: Shared styling (fonts, colors, Tailwind)
+- `types/`: Common business logic types
+- `utils/`: Shared utilities (formatting, date operations)
+- `constants`: Shared constants (tokens, etc.)

@@ -1,0 +1,36 @@
+import {NextRequest, NextResponse} from "next/server";
+import {cookies} from "next/headers";
+
+import {JoseSessionAdapter} from "@/auth/adapters/jose-session.adapter";
+
+const sessionAdapter = new JoseSessionAdapter();
+
+// 1. Specify protected and public routes
+const protectedRoutes = ["/appointment"];
+const publicRoutes = ["/login", "/register"];
+
+export default async function middleware(req: NextRequest) {
+  // 2. Check if the current route is protected or public
+  const path = req.nextUrl.pathname;
+  const isProtectedRoute = protectedRoutes.includes(path);
+  const isPublicRoute = publicRoutes.includes(path);
+
+  // 3. Decrypt the session from the cookie
+  const cookie = cookies().get("session")?.value;
+  const session = await sessionAdapter.decrypt(cookie);
+
+  // 4. Redirect
+  if (isProtectedRoute && !session?.accountId) {
+    const redirectUrl = new URL("/login", req.nextUrl);
+
+    redirectUrl.searchParams.set("redirect", req.nextUrl.pathname);
+
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (isPublicRoute && session?.accountId && !req.nextUrl.pathname.startsWith("/appointment")) {
+    return NextResponse.redirect(new URL("/appointment", req.nextUrl));
+  }
+
+  return NextResponse.next();
+}
